@@ -1,12 +1,22 @@
 from rest_framework import permissions
 
 
-class OwnerOrReadOnly(permissions.BasePermission):
+class OwnerOnly(permissions.BasePermission):
+    '''Если колода принадлежит автору... то ОК'''
     def has_permission(self, request, view):
-        return (
-            request.method in permissions.SAFE_METHODS
-            or request.user.is_authenticated)
+        deck = request.META['HTTP_REFERER'].split('/')[-2]
+        if request.user.decks.filter(id=deck).exists():
+            return True
+        return False
+        # return (request.user.is_authenticated)
 
+    def has_object_permission(self, request, view, obj):
+        return (
+            obj.author == request.user
+        )
+
+
+class OwnerOrReadOnly(OwnerOnly):
     def has_object_permission(self, request, view, obj):
         return (
             obj.author == request.user
