@@ -81,6 +81,11 @@ class Deck(models.Model):
         default=0,
         verbose_name='Кол-во',
     )
+    author = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='decks'
+    )
 
     def __str__(self) -> str:
         return self.title
