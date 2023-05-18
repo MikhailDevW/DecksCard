@@ -62,3 +62,83 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class Deck(models.Model):
+    '''Данный класс описывает таблицу колод карточек.'''
+    title = models.CharField(
+        max_length=200,
+        verbose_name='Название',
+    )
+    slug = models.SlugField(
+        unique=True,
+        max_length=50,
+    )
+    description = models.TextField(
+        blank=True,
+    )
+    cards_per_day = models.PositiveIntegerField(
+        default=0,
+        verbose_name='Кол-во',
+    )
+
+    def __str__(self) -> str:
+        return self.title
+
+    class Mets:
+        verbose_name = 'Колода'
+        verbose_name_plural = 'Колоды'
+
+
+class Card(models.Model):
+    '''
+    Данный класс модели поисывает карточку,
+    которую видит пользватель.
+    '''
+    front_side = models.CharField(
+        max_length=200,
+        verbose_name='Лицо',
+    )
+    prompt = models.CharField(
+        max_length=200,
+        verbose_name='Дефиниция',
+        blank=True, null=True,
+    )
+    back_side = models.CharField(
+        max_length=200,
+        verbose_name='Ответ',
+    )
+    audio = models.FileField(
+        upload_to='audio/',
+        blank=True, null=True,
+    )
+    example = models.TextField(
+        blank=True,
+        verbose_name='Пример',
+    )
+    '''скрытые поля'''
+    pub_date = models.DateTimeField(
+        auto_now_add=True,
+    )
+    next_use_date = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата след. показа',
+    )
+    level = models.PositiveIntegerField(
+        default=0,
+        verbose_name='Уровень',
+    )
+
+    deck = models.ForeignKey(
+        Deck,
+        on_delete=models.CASCADE,
+        related_name='cards',
+    )
+
+    def __str__(self) -> str:
+        return self.front_side
+
+    class Mets:
+        ordering = ('-next_use_date',)
+        verbose_name = 'Карточка'
+        verbose_name_plural = 'Карточки'
