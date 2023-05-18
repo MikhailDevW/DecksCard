@@ -40,9 +40,3 @@ class CardsViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self._get_deck().cards.all()
-
-    # def perform_create(self, serializer):
-    #     serializer.save(
-    #         post=self._get_post(),
-    #         author=self.request.user
-    #     )
