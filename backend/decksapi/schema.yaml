@@ -309,7 +309,7 @@ paths:
           description: ''
       tags:
       - api
-  /auth/users/:
+  /api/auth/users/:
     get:
       operationId: listCustomUsers
       description: ''
@@ -324,7 +324,7 @@ paths:
                   $ref: '#/components/schemas/User'
           description: ''
       tags:
-      - auth
+      - api
     post:
       operationId: createCustomUser
       description: ''
@@ -348,8 +348,8 @@ paths:
                 $ref: '#/components/schemas/UserCreate'
           description: ''
       tags:
-      - auth
-  /auth/users/me/:
+      - api
+  /api/auth/users/me/:
     get:
       operationId: meCustomUser
       description: ''
@@ -362,7 +362,7 @@ paths:
                 $ref: '#/components/schemas/User'
           description: ''
       tags:
-      - auth
+      - api
     put:
       operationId: meCustomUser
       description: ''
@@ -386,7 +386,7 @@ paths:
                 $ref: '#/components/schemas/User'
           description: ''
       tags:
-      - auth
+      - api
     patch:
       operationId: meCustomUser
       description: ''
@@ -410,7 +410,7 @@ paths:
                 $ref: '#/components/schemas/User'
           description: ''
       tags:
-      - auth
+      - api
     delete:
       operationId: meCustomUser
       description: ''
@@ -419,8 +419,8 @@ paths:
         '204':
           description: ''
       tags:
-      - auth
-  /auth/users/{id}/:
+      - api
+  /api/auth/users/{id}/:
     get:
       operationId: retrieveCustomUser
       description: ''
@@ -439,7 +439,7 @@ paths:
                 $ref: '#/components/schemas/User'
           description: ''
       tags:
-      - auth
+      - api
     put:
       operationId: updateCustomUser
       description: ''
@@ -469,7 +469,7 @@ paths:
                 $ref: '#/components/schemas/User'
           description: ''
       tags:
-      - auth
+      - api
     patch:
       operationId: partialUpdateCustomUser
       description: ''
@@ -499,7 +499,7 @@ paths:
                 $ref: '#/components/schemas/User'
           description: ''
       tags:
-      - auth
+      - api
     delete:
       operationId: destroyCustomUser
       description: ''
@@ -514,8 +514,8 @@ paths:
         '204':
           description: ''
       tags:
-      - auth
-  /auth/users/activation/:
+      - api
+  /api/auth/users/activation/:
     post:
       operationId: activationCustomUser
       description: ''
@@ -539,8 +539,8 @@ paths:
                 $ref: '#/components/schemas/Activation'
           description: ''
       tags:
-      - auth
-  /auth/users/resend_activation/:
+      - api
+  /api/auth/users/resend_activation/:
     post:
       operationId: resendActivationCustomUser
       description: ''
@@ -564,8 +564,8 @@ paths:
                 $ref: '#/components/schemas/SendEmailReset'
           description: ''
       tags:
-      - auth
-  /auth/users/reset_password/:
+      - api
+  /api/auth/users/reset_password/:
     post:
       operationId: resetPasswordCustomUser
       description: ''
@@ -589,8 +589,8 @@ paths:
                 $ref: '#/components/schemas/SendEmailReset'
           description: ''
       tags:
-      - auth
-  /auth/users/reset_password_confirm/:
+      - api
+  /api/auth/users/reset_password_confirm/:
     post:
       operationId: resetPasswordConfirmCustomUser
       description: ''
@@ -614,8 +614,8 @@ paths:
                 $ref: '#/components/schemas/PasswordResetConfirm'
           description: ''
       tags:
-      - auth
-  /auth/users/reset_email/:
+      - api
+  /api/auth/users/reset_email/:
     post:
       operationId: resetUsernameCustomUser
       description: ''
@@ -639,8 +639,8 @@ paths:
                 $ref: '#/components/schemas/SendEmailReset'
           description: ''
       tags:
-      - auth
-  /auth/users/reset_email_confirm/:
+      - api
+  /api/auth/users/reset_email_confirm/:
     post:
       operationId: resetUsernameConfirmCustomUser
       description: ''
@@ -664,8 +664,8 @@ paths:
                 $ref: '#/components/schemas/UsernameResetConfirm'
           description: ''
       tags:
-      - auth
-  /auth/users/set_password/:
+      - api
+  /api/auth/users/set_password/:
     post:
       operationId: setPasswordCustomUser
       description: ''
@@ -689,8 +689,8 @@ paths:
                 $ref: '#/components/schemas/SetPassword'
           description: ''
       tags:
-      - auth
-  /auth/users/set_email/:
+      - api
+  /api/auth/users/set_email/:
     post:
       operationId: setUsernameCustomUser
       description: ''
@@ -714,8 +714,8 @@ paths:
                 $ref: '#/components/schemas/SetUsernameRetype'
           description: ''
       tags:
-      - auth
-  /auth/jwt/create/:
+      - api
+  /api/auth/create/:
     post:
       operationId: createTokenObtainPair
       description: 'Takes a set of user credentials and returns an access and refresh
@@ -742,8 +742,8 @@ paths:
                 $ref: '#/components/schemas/TokenObtainPair'
           description: ''
       tags:
-      - auth
-  /auth/jwt/refresh/:
+      - api
+  /api/auth/refresh/:
     post:
       operationId: createTokenRefresh
       description: 'Takes a refresh type JSON web token and returns an access type
@@ -770,8 +770,8 @@ paths:
                 $ref: '#/components/schemas/TokenRefresh'
           description: ''
       tags:
-      - auth
-  /auth/jwt/verify/:
+      - api
+  /api/auth/verify/:
     post:
       operationId: createTokenVerify
       description: 'Takes a token and indicates if it is valid.  This view provides
@@ -798,7 +798,7 @@ paths:
                 $ref: '#/components/schemas/TokenVerify'
           description: ''
       tags:
-      - auth
+      - api
 components:
   schemas:
     Deck:
