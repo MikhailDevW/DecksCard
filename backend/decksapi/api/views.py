@@ -1,9 +1,9 @@
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
-from rest_framework import permissions
 
 from core.models import Deck
-from .permissions import OwnerOnly
+# from .permissions import OwnerOnly
 from .serializers import DeckSerializer, CardSerializer
 
 
@@ -30,7 +30,7 @@ class CardsViewSet(viewsets.ModelViewSet):
     Only owner can edit the comment.
     '''
     serializer_class = CardSerializer
-    permission_classes = (OwnerOnly,)
+    # permission_classes = (OwnerOnly,)
 
     def _get_deck(self):
         return get_object_or_404(
@@ -38,5 +38,31 @@ class CardsViewSet(viewsets.ModelViewSet):
             id=self.kwargs.get('deck_id')
         )
 
+    def _isowner(self):
+        if not self.request.user.decks.filter(
+            id=self.kwargs.get('deck_id')
+        ).exists():
+            return False
+        return True
+
     def get_queryset(self):
+        if not self._isowner():
+            raise PermissionDenied('Not allowed!')
         return self._get_deck().cards.all()
+
+    def perform_create(self, serializer):
+        serializer.save(
+            deck=self._get_deck(),
+        )
+
+    def perform_update(self, serializer):
+        if not self._isowner():
+            raise PermissionDenied('Change is not allowed!')
+        super(CardsViewSet, self).perform_update(serializer)
+
+    def perform_destroy(self, instance):
+        if not self._isowner():
+            raise PermissionDenied(
+                'Delete is not allowed.'
+            )
+        super(CardsViewSet, self).perform_destroy(instance)
