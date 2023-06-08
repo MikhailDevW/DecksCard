@@ -7,13 +7,9 @@ env = environ.Env()
 environ.Env.read_env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 SECRET_KEY = env('SECRET_KEY')
-
 DEBUG = env('DEBUG')
-
 ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(',')
-
 
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -31,7 +27,6 @@ PROJECT_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
-    'djoser',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
@@ -114,24 +109,24 @@ SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-DJOSER = {
-    "LOGIN_FIELD": "email",
-    "USER_CREATE_PASSWORD_RETYPE": False,
-    "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
-    "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
-    "SEND_CONFIRMATION_EMAIL": False,
-    "SET_USERNAME_RETYPE": True,
-    "SET_PASSWORD_RETYPE": False,
-    "USERNAME_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
-    "PASSWORD_RESET_CONFIRM_URL": "email/reset/confirm/{uid}/{token}",
-    "ACTIVATION_URL": "activate/{uid}/{token}",
-    "SEND_ACTIVATION_EMAIL": False,
-    "SOCIAL_AUTH_TOKEN_STRATEGY": "djoser.social.token.jwt.TokenStrategy",
-    "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": [],
-    "SERIALIZERS": {
-        "user_create": "core.serializers.UserCreateSerializer",
-        "user": "djoser.serializers.UserSerializer",
-        "current_user": "djoser.serializers.UserSerializer",
-        "user_delete": "djoser.serializers.UserSerializer",
-    },
-}
+# DJOSER = {
+#     "LOGIN_FIELD": "email",
+#     "USER_CREATE_PASSWORD_RETYPE": False,
+#     "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
+#     "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
+#     "SEND_CONFIRMATION_EMAIL": False,
+#     "SET_USERNAME_RETYPE": True,
+#     "SET_PASSWORD_RETYPE": False,
+#     "USERNAME_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
+#     "PASSWORD_RESET_CONFIRM_URL": "email/reset/confirm/{uid}/{token}",
+#     "ACTIVATION_URL": "activate/{uid}/{token}",
+#     "SEND_ACTIVATION_EMAIL": False,
+#     "SOCIAL_AUTH_TOKEN_STRATEGY": "djoser.social.token.jwt.TokenStrategy",
+#     "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": [],
+#     "SERIALIZERS": {
+#         "user_create": "core.serializers.UserCreateSerializer",
+#         "user": "djoser.serializers.UserSerializer",
+#         "current_user": "djoser.serializers.UserSerializer",
+#         "user_delete": "djoser.serializers.UserSerializer",
+#     },
+# }

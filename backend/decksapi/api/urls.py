@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView, TokenRefreshView, TokenVerifyView
 )
 
-from .views import DashboardViewSet, CardsViewSet
+from .views import CardsViewSet, DashboardViewSet, UserSignUp
 
 
 router = SimpleRouter()
@@ -17,8 +17,13 @@ router.register(
 
 
 urlpatterns = [
-    path('v1/', include(router.urls)),
-    path('auth/', include('djoser.urls')),
+    path('', include(router.urls)),
+    # path('auth/', include('djoser.urls')),
+    path(
+        'auth/signup/',
+        UserSignUp.as_view(),
+        name='signup',
+    ),
     re_path(
         r"^auth/create/?",
         TokenObtainPairView.as_view(),
@@ -34,5 +39,4 @@ urlpatterns = [
         TokenVerifyView.as_view(),
         name="jwt-verify"
     ),
-    # path('auth/', include('djoser.urls.jwt')),
 ]

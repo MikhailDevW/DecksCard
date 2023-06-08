@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 
-from core.models import Deck, Card
+from core.models import Deck, Card, CustomUser
 
 
 class DeckSerializer(serializers.ModelSerializer):
-    author = SlugRelatedField(slug_field='username', read_only=True)
+    author = SlugRelatedField(slug_field='email', read_only=True)
     amount = serializers.SerializerMethodField()
 
     class Meta:
@@ -26,3 +26,9 @@ class CardSerializer(serializers.ModelSerializer):
             'id', 'front_side', 'prompt', 'back_side', 'example', 'level'
         )
         model = Card
+
+
+class SignUpSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ('email', 'password')
+        model = CustomUser

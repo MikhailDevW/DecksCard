@@ -1,3 +1,6 @@
+import re
+
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -31,11 +34,20 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(max_length=255, unique=True)
+    """Наш кастомный пользователь."""
+    def username_validator(value):
+        pattern = r'^[\w.@+-]+\Z'
+        if re.match(pattern, value) is None:
+            raise ValidationError('Check your username')
+
+    email = models.EmailField(
+        max_length=255,
+        unique=True)
     username = models.CharField(
         max_length=255,
-        unique=True, blank=True,
-        null=True
+        unique=True,
+        blank=True, null=True,
+        validators=[username_validator],
     )
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
