@@ -1,5 +1,6 @@
 import re
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import (
@@ -19,7 +20,12 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, username=None, password=None, **extra_fields):
+    def create_superuser(
+        self, email,
+        username=None,
+        password=None,
+        **extra_fields
+    ):
         user = self.create_user(
             email,
             username,
@@ -28,37 +34,61 @@ class CustomUserManager(BaseUserManager):
         )
         user.is_active = True
         user.is_staff = True
-        user.is_admin = True
+        user.is_superuser = True
         user.save(using=self._db)
         return user
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    """Наш кастомный пользователь."""
+    """Our custom user model."""
+    USER = 'user'
+    PREMIUM_USER = 'Premium'
+    ADMIN = 'Admin'
+    SUPERUSER = 'Superuser'
+    ROLE = (
+        (USER, 'User'),
+        (PREMIUM_USER, 'Premium-user'),
+        (ADMIN, 'Administrator'),
+        (SUPERUSER, 'Superuser'),
+    )
+
     def username_validator(value):
         pattern = r'^[\w.@+-]+\Z'
         if re.match(pattern, value) is None:
-            raise ValidationError('Check your username')
+            raise ValidationError(
+                'Enter a valid username. This value may contain only letters, '
+                'numbers, and @/./+/-/_ characters.'
+            )
 
     email = models.EmailField(
-        max_length=255,
+        max_length=settings.EMAIL_LENGTH,
         unique=True)
     username = models.CharField(
-        max_length=255,
+        max_length=settings.NAME_LENGTH,
         unique=True,
         blank=True, null=True,
         validators=[username_validator],
     )
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    first_name = models.CharField(
+        max_length=settings.NAME_LENGTH,
+        blank=True, null=True,
+    )
+    last_name = models.CharField(
+        max_length=settings.NAME_LENGTH,
+        blank=True, null=True,
+    )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
+    role = models.CharField(
+        max_length=settings.USER_ROLE_LENGTH,
+        choices=ROLE,
+        default='user',
+    )
 
     objects = CustomUserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["first_name", "last_name"]
+    REQUIRED_FIELDS = ["first_name", ]
 
     def get_full_name(self):
         return f"{self.first_name} - {self.last_name}"

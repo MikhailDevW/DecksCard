@@ -1,16 +1,20 @@
-# from django.conf import settings
+from django.conf import settings
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import get_object_or_404
 from rest_framework import (
     generics, permissions, status, viewsets
 )
 from rest_framework.response import Response
 
+
 from core.models import Card, CustomUser, Deck
+from core.utils import Mail
+from .mixins import CreateViewSet
 from .permissions import OwnerOnly
 from .serializers import CardSerializer, DeckSerializer, SignUpSerializer
 
 
-class UserSignUp(generics.CreateAPIView):
+class UserSignUp(CreateViewSet):
     """
     Получить код подтверждения на переданный email.
     Права доступа: Доступно без токена.
@@ -24,17 +28,16 @@ class UserSignUp(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        # user_code = default_token_generator.make_token(user)
-
-        # if settings.SEND_CONFIRM_EMAIL:
-        #     mail = Mail(
-        #         serializer.validated_data['email'],
-        #         user_code,
-        #     )
-        #     mail.send_message()
+        serializer.save(
+            password=make_password(serializer.validated_data['password'])
+        )
+        if settings.SEND_CONFIRM_EMAIL:
+            mail = Mail(
+                serializer.validated_data['email'],
+                'Добро пожаловать.',
+            )
+            mail.send_message()
         return Response(
-            serializer.data,
             status=status.HTTP_200_OK,
         )
 
