@@ -10,6 +10,13 @@ from django.contrib.auth.models import (
 )
 
 
+class UserRole(models.TextChoices):
+    USER = 'USER', 'Common user'
+    PREMIUM_USER = 'PREMIUM', 'Premium user'
+    ADMIN = 'ADMIN', 'Site admin'
+    SUPERUSER = 'SUPERUSER', 'Superuser'
+
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username=None, password=None, **extra_fields):
         if not email:
@@ -34,6 +41,7 @@ class CustomUserManager(BaseUserManager):
         )
         user.is_active = True
         user.is_staff = True
+        user.role = UserRole.SUPERUSER
         user.is_superuser = True
         user.save(using=self._db)
         return user
@@ -41,23 +49,20 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     """Our custom user model."""
-    USER = 'user'
-    PREMIUM_USER = 'Premium'
-    ADMIN = 'Admin'
-    SUPERUSER = 'Superuser'
-    ROLE = (
-        (USER, 'User'),
-        (PREMIUM_USER, 'Premium-user'),
-        (ADMIN, 'Administrator'),
-        (SUPERUSER, 'Superuser'),
-    )
-
     def username_validator(value):
         pattern = r'^[\w.@+-]+\Z'
         if re.match(pattern, value) is None:
             raise ValidationError(
                 'Enter a valid username. This value may contain only letters, '
                 'numbers, and @/./+/-/_ characters.'
+            )
+
+    def password_validator(value):
+        pattern = settings.USER_PASSWORD_PATTERN
+        if re.match(pattern, value) is None:
+            raise ValidationError(
+                'Enter a valid password.'
+                'It should contains at least one letter in uppercase!'
             )
 
     email = models.EmailField(
@@ -68,6 +73,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         unique=True,
         blank=True, null=True,
         validators=[username_validator],
+    )
+    password = models.CharField(
+        'password',
+        max_length=settings.USER_PASSWORD_MAX_LENGTH,
+        validators=[password_validator],
     )
     first_name = models.CharField(
         max_length=settings.NAME_LENGTH,
@@ -81,8 +91,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     role = models.CharField(
         max_length=settings.USER_ROLE_LENGTH,
-        choices=ROLE,
-        default='user',
+        choices=UserRole.choices,
+        default=UserRole.USER,
     )
 
     objects = CustomUserManager()

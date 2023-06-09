@@ -117,9 +117,6 @@ SIMPLE_JWT = {
     "TOKEN_OBTAIN_SERIALIZER": "api.serializers.MyTokenObtainPairSerializer",
     "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
     "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
-    "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
-    "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
-    "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
 SEND_CONFIRM_EMAIL = False
@@ -128,4 +125,5 @@ NAME_LENGTH = 150
 
 USER_PASSWORD_PATTERN = r'(?=.*[A-Z])'  # хотя бы одна заглавная
 USER_PASSWORD_MIN_LENGTH = 8
+USER_PASSWORD_MAX_LENGTH = 128
 USER_ROLE_LENGTH = 13
