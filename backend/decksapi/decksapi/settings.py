@@ -119,7 +119,10 @@ SIMPLE_JWT = {
     "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
 }
 
-SEND_CONFIRM_EMAIL = False
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = BASE_DIR / "mail"  # change this to a proper location
+
+SEND_CONFIRM_EMAIL = True
 EMAIL_LENGTH = 100
 NAME_LENGTH = 150
 

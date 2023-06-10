@@ -87,7 +87,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         max_length=settings.NAME_LENGTH,
         blank=True, null=True,
     )
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     role = models.CharField(
         max_length=settings.USER_ROLE_LENGTH,
