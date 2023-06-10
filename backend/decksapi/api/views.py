@@ -36,6 +36,7 @@ class UserSignUp(CreateViewSet):
         )
         user_uid = encode_uid(user.id)
         user_code = default_token_generator.make_token(user)
+
         if settings.SEND_CONFIRM_EMAIL:
             mail = Mail(
                 serializer.validated_data['email'],
@@ -65,7 +66,7 @@ class ConfirmCodeView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         user = self._get_user_from_url(self.kwargs.get('uid'))
-        if not default_token_generator.check_token(
+        if user.is_active or not default_token_generator.check_token(
             user,
             self.kwargs.get('code')
         ):

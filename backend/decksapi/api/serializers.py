@@ -4,7 +4,7 @@ from rest_framework.relations import SlugRelatedField
 from rest_framework_simplejwt.serializers import TokenObtainSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from core.models import Deck, Card, CustomUser
+from core.models import Card, CustomUser, Deck
 
 
 class DeckSerializer(serializers.ModelSerializer):
