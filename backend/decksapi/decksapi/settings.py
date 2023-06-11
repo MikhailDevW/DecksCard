@@ -26,7 +26,8 @@ PROJECT_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    "rest_framework",
+    'rest_framework',
+    'rest_framework_simplejwt',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
@@ -64,7 +65,7 @@ WSGI_APPLICATION = 'decksapi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': env('DB_ENGINE'),
-        'NAME': env('DB_NAME'),
+        'NAME': BASE_DIR / env('DB_NAME'),
     }
 }
 
@@ -105,28 +106,27 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-   'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-   'AUTH_HEADER_TYPES': ('Bearer',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
+
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+    "TOKEN_USER_CLASS": "core.models.CustomUser",
+
+    "TOKEN_OBTAIN_SERIALIZER": "api.serializers.MyTokenObtainPairSerializer",
+    "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
+    "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
 }
 
-# DJOSER = {
-#     "LOGIN_FIELD": "email",
-#     "USER_CREATE_PASSWORD_RETYPE": False,
-#     "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
-#     "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
-#     "SEND_CONFIRMATION_EMAIL": False,
-#     "SET_USERNAME_RETYPE": True,
-#     "SET_PASSWORD_RETYPE": False,
-#     "USERNAME_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
-#     "PASSWORD_RESET_CONFIRM_URL": "email/reset/confirm/{uid}/{token}",
-#     "ACTIVATION_URL": "activate/{uid}/{token}",
-#     "SEND_ACTIVATION_EMAIL": False,
-#     "SOCIAL_AUTH_TOKEN_STRATEGY": "djoser.social.token.jwt.TokenStrategy",
-#     "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": [],
-#     "SERIALIZERS": {
-#         "user_create": "core.serializers.UserCreateSerializer",
-#         "user": "djoser.serializers.UserSerializer",
-#         "current_user": "djoser.serializers.UserSerializer",
-#         "user_delete": "djoser.serializers.UserSerializer",
-#     },
-# }
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = BASE_DIR / "mail"  # change this to a proper location
+
+SEND_CONFIRM_EMAIL = True
+EMAIL_LENGTH = 100
+NAME_LENGTH = 150
+
+USER_PASSWORD_PATTERN = r'(?=.*[A-Z])'  # хотя бы одна заглавная
+USER_PASSWORD_MIN_LENGTH = 8
+USER_PASSWORD_MAX_LENGTH = 128
+USER_ROLE_LENGTH = 13

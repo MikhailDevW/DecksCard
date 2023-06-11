@@ -1,7 +1,10 @@
+from django.conf import settings
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
+from rest_framework_simplejwt.serializers import TokenObtainSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 
-from core.models import Deck, Card, CustomUser
+from core.models import Card, CustomUser, Deck
 
 
 class DeckSerializer(serializers.ModelSerializer):
@@ -20,7 +23,6 @@ class DeckSerializer(serializers.ModelSerializer):
 
 
 class CardSerializer(serializers.ModelSerializer):
-
     class Meta:
         fields = (
             'id', 'front_side', 'prompt', 'back_side', 'example', 'level'
@@ -29,6 +31,26 @@ class CardSerializer(serializers.ModelSerializer):
 
 
 class SignUpSerializer(serializers.ModelSerializer):
+    password = serializers.RegexField(
+        regex=settings.USER_PASSWORD_PATTERN,
+        min_length=settings.USER_PASSWORD_MIN_LENGTH
+    )
+
     class Meta:
-        fields = ('email', 'password')
+        fields = ('email', 'password', 'first_name', 'last_name')
         model = CustomUser
+
+
+class MyTokenObtainPairSerializer(TokenObtainSerializer):
+    @classmethod
+    def get_token(cls, user):
+        return RefreshToken.for_user(user)
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        access = self.get_token(self.user)
+        data['access'] = str(access.access_token)
+        # будет допиливаться
+        # if api_settings.UPDATE_LAST_LOGIN:
+        #     update_last_login(None, self.user)
+        return data
