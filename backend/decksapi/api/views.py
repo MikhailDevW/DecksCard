@@ -22,7 +22,8 @@ class UserSignUp(CreateViewSet):
     Пользователь отправляет email и password.
     На почту пользователю приходит сообщение с ссылкой актвиации
     Права доступа: Доступно без токена.
-    Поля email и username должны быть уникальными.
+    Поля email и должны быть уникальными.
+    Методы: только POST
     """
     queryset = CustomUser.objects.all()
     serializer_class = SignUpSerializer
@@ -54,6 +55,7 @@ class ConfirmCodeView(generics.CreateAPIView):
     Пользовател подтвержадет свою почту по ссылке,
     которая пришла при регистрации.
     Права доступа: Доступно без токена.
+    Методы: только POST
     """
     permission_classes = (permissions.AllowAny,)
 
