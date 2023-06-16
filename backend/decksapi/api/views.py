@@ -101,13 +101,16 @@ class DashboardViewSet(viewsets.ModelViewSet):
 class CardsViewSet(viewsets.ModelViewSet):
     queryset = Card.objects.all()
     serializer_class = CardSerializer
-    permission_classes = (OwnerOnly,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def _get_deck(self):
         return get_object_or_404(
             Deck,
-            id=self.kwargs.get('deck_id')
+            id=decode_uid(self.kwargs.get('slug'))
         )
 
     def get_queryset(self):
         return self._get_deck().cards.all()
+
+    def perform_create(self, serializer):
+        serializer.save(deck=self._get_deck())

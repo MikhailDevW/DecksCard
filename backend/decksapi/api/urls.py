@@ -9,11 +9,11 @@ from .serializers import MyTokenObtainPairSerializer
 router = SimpleRouter()
 router.register('auth/signup', UserSignUp)
 router.register('dashboard', DashboardViewSet)
-# router.register(
-#     r'dashboard/<str:slug>/cards',
-#     CardsViewSet,
-#     basename='cards',
-# )
+router.register(
+    r'dashboard/(?P<slug>\w+)/cards',
+    CardsViewSet,
+    basename='cards',
+)
 
 
 urlpatterns = [
