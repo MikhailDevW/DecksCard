@@ -10,10 +10,11 @@ from core.models import Card, CustomUser, Deck
 class DeckSerializer(serializers.ModelSerializer):
     author = SlugRelatedField(slug_field='email', read_only=True)
     amount = serializers.SerializerMethodField()
+    slug = serializers.SlugField(read_only=True)
 
     class Meta:
         fields = (
-            'id', 'author', 'slug', 'title', 'description', 'cards_per_day',
+            'slug', 'author', 'title', 'description', 'cards_per_day',
             'amount',
         )
         model = Deck
@@ -54,3 +55,7 @@ class MyTokenObtainPairSerializer(TokenObtainSerializer):
         # if api_settings.UPDATE_LAST_LOGIN:
         #     update_last_login(None, self.user)
         return data
+
+
+class ConfirmCodeSerializer(serializers.Serializer):
+    pass

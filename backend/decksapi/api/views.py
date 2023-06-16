@@ -12,7 +12,9 @@ from core.models import Card, CustomUser, Deck
 from core.utils import Mail
 from .mixins import CreateViewSet
 from .permissions import OwnerOnly
-from .serializers import CardSerializer, DeckSerializer, SignUpSerializer
+from .serializers import (
+    CardSerializer, ConfirmCodeSerializer, DeckSerializer, SignUpSerializer
+)
 from core.utils import decode_uid, encode_uid
 
 
@@ -50,7 +52,7 @@ class UserSignUp(CreateViewSet):
         )
 
 
-class ConfirmCodeView(generics.CreateAPIView):
+class ConfirmCodeView(generics.ListCreateAPIView):
     """
     Пользовател подтвержадет свою почту по ссылке,
     которая пришла при регистрации.
@@ -58,6 +60,7 @@ class ConfirmCodeView(generics.CreateAPIView):
     Методы: только POST
     """
     permission_classes = (permissions.AllowAny,)
+    serializer_class = ConfirmCodeSerializer
 
     def _get_user_from_url(self, uid):
         id = decode_uid(uid)
@@ -66,7 +69,7 @@ class ConfirmCodeView(generics.CreateAPIView):
             id=id)
         return user
 
-    def create(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         user = self._get_user_from_url(self.kwargs.get('uid'))
         if user.is_active or not default_token_generator.check_token(
             user,
@@ -86,6 +89,7 @@ class DashboardViewSet(viewsets.ModelViewSet):
     """
     queryset = Deck.objects.all()
     serializer_class = DeckSerializer
+    lookup_field = 'slug'
 
     def get_queryset(self):
         return self.request.user.decks.all()
