@@ -121,18 +121,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Deck(models.Model):
     '''Данный класс описывает таблицу колод карточек.'''
     title = models.CharField(
-        max_length=200,
+        max_length=settings.DECK_TITLE_LENGTH,
         verbose_name='Title',
     )
     slug = models.SlugField(
         unique=True,
-        max_length=50,
+        max_length=settings.DECK_SLUG_LENGTH,
     )
     description = models.TextField(
         blank=True,
     )
     cards_per_day = models.PositiveIntegerField(
-        default=0,
+        default=settings.CARDS_PER_DAY_DEFAULT,
         verbose_name='Amount per day',
     )
     author = models.ForeignKey(
@@ -161,16 +161,16 @@ class Card(models.Model):
     которую видит пользватель.
     '''
     front_side = models.CharField(
-        max_length=200,
+        max_length=settings.CARD_MAX_LENGTH,
         verbose_name='Front',
     )
     prompt = models.CharField(
-        max_length=200,
+        max_length=settings.CARD_MAX_LENGTH,
         verbose_name='Definition',
         blank=True, null=True,
     )
     back_side = models.CharField(
-        max_length=200,
+        max_length=settings.CARD_MAX_LENGTH,
         verbose_name='Answer',
     )
     audio = models.FileField(

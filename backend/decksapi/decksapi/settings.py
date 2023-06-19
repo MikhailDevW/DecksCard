@@ -104,6 +104,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
 }
 
 SIMPLE_JWT = {
@@ -131,3 +134,9 @@ USER_PASSWORD_PATTERN = r'(?=.*[A-Z])'  # хотя бы одна заглавн�
 USER_PASSWORD_MIN_LENGTH = 8
 USER_PASSWORD_MAX_LENGTH = 128
 USER_ROLE_LENGTH = 13
+
+DECK_TITLE_LENGTH = 200
+DECK_SLUG_LENGTH = 50
+CARDS_PER_DAY_DEFAULT = 10
+
+CARD_MAX_LENGTH = 200

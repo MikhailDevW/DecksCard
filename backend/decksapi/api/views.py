@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.tokens import default_token_generator
@@ -5,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import (
     generics, permissions, status, viewsets
 )
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 
@@ -101,7 +104,7 @@ class DashboardViewSet(viewsets.ModelViewSet):
 class CardsViewSet(viewsets.ModelViewSet):
     queryset = Card.objects.all()
     serializer_class = CardSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (OwnerOnly,)
 
     def _get_deck(self):
         return get_object_or_404(
@@ -110,7 +113,21 @@ class CardsViewSet(viewsets.ModelViewSet):
         )
 
     def get_queryset(self):
-        return self._get_deck().cards.all()
+        return self._get_deck().cards.filter(
+            next_use_date__date__lte=date.today()
+        )
 
     def perform_create(self, serializer):
         serializer.save(deck=self._get_deck())
+
+    @action(
+        methods=['get'],
+        detail=False,
+        permission_classes=(OwnerOnly,),
+        url_path='all',
+        url_name='all'
+    )
+    def all(self, request, *args, **kwargs):
+        cards = self._get_deck().cards.all()
+        serializer = CardSerializer(cards, many=True)
+        return Response(serializer.data)
