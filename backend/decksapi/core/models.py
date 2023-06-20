@@ -19,6 +19,13 @@ class UserRole(models.TextChoices):
     SUPERUSER = 'SUPERUSER', 'Superuser'
 
 
+class UserRole(models.TextChoices):
+    USER = 'USER', 'Common user'
+    PREMIUM_USER = 'PREMIUM', 'Premium user'
+    ADMIN = 'ADMIN', 'Site admin'
+    SUPERUSER = 'SUPERUSER', 'Superuser'
+
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username=None, password=None, **extra_fields):
         if not email:
@@ -101,6 +108,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', ]
+
 
     def get_full_name(self):
         return f"{self.first_name} - {self.last_name}"
