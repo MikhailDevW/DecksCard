@@ -301,6 +301,28 @@ paths:
           description: ''
       tags:
       - api-cards
+  /api/v1/dashboard/{slug}/cards/all/:
+    get:
+      operationId: Получение всех карточек словаря.
+      description: 'GET-запрос на получение всех карточек которые есть в колоде.'
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Card'
+          description: ''
+      tags:
+      - api-cards
   /api/v1/dashboard/{slug}/cards/{id}/:
     get:
       operationId: Получение свойств карточки
@@ -457,6 +479,8 @@ components:
           type: string
           maxLength: 200
         example:
+          type: string
+        next_use_date:
           type: string
         level:
           type: integer
