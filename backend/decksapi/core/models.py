@@ -9,6 +9,15 @@ from django.contrib.auth.models import (
     BaseUserManager,
 )
 
+from core.utils import encode_uid
+
+
+class UserRole(models.TextChoices):
+    USER = 'USER', 'Common user'
+    PREMIUM_USER = 'PREMIUM', 'Premium user'
+    ADMIN = 'ADMIN', 'Site admin'
+    SUPERUSER = 'SUPERUSER', 'Superuser'
+
 
 class UserRole(models.TextChoices):
     USER = 'USER', 'Common user'
@@ -97,8 +106,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["first_name", ]
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', ]
+
 
     def get_full_name(self):
         return f"{self.first_name} - {self.last_name}"
@@ -119,19 +129,19 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 class Deck(models.Model):
     '''Данный класс описывает таблицу колод карточек.'''
     title = models.CharField(
-        max_length=200,
-        verbose_name='Название',
+        max_length=settings.DECK_TITLE_LENGTH,
+        verbose_name='Title',
     )
     slug = models.SlugField(
         unique=True,
-        max_length=50,
+        max_length=settings.DECK_SLUG_LENGTH,
     )
     description = models.TextField(
         blank=True,
     )
     cards_per_day = models.PositiveIntegerField(
-        default=0,
-        verbose_name='Кол-во',
+        default=settings.CARDS_PER_DAY_DEFAULT,
+        verbose_name='Amount per day',
     )
     author = models.ForeignKey(
         CustomUser,
@@ -142,9 +152,15 @@ class Deck(models.Model):
     def __str__(self) -> str:
         return self.title
 
+    def save(self, *args, **kwargs):
+        super(Deck, self).save(*args, **kwargs)
+        if not self.slug:
+            self.slug = encode_uid(self.id)
+            self.save()
+
     class Mets:
-        verbose_name = 'Колода'
-        verbose_name_plural = 'Колоды'
+        verbose_name = 'Deck'
+        verbose_name_plural = 'Decks'
 
 
 class Card(models.Model):
@@ -153,17 +169,17 @@ class Card(models.Model):
     которую видит пользватель.
     '''
     front_side = models.CharField(
-        max_length=200,
-        verbose_name='Лицо',
+        max_length=settings.CARD_MAX_LENGTH,
+        verbose_name='Front',
     )
     prompt = models.CharField(
-        max_length=200,
-        verbose_name='Дефиниция',
+        max_length=settings.CARD_MAX_LENGTH,
+        verbose_name='Definition',
         blank=True, null=True,
     )
     back_side = models.CharField(
-        max_length=200,
-        verbose_name='Ответ',
+        max_length=settings.CARD_MAX_LENGTH,
+        verbose_name='Answer',
     )
     audio = models.FileField(
         upload_to='audio/',
@@ -171,7 +187,7 @@ class Card(models.Model):
     )
     example = models.TextField(
         blank=True,
-        verbose_name='Пример',
+        verbose_name='Example',
     )
     '''скрытые поля'''
     pub_date = models.DateTimeField(
@@ -179,11 +195,11 @@ class Card(models.Model):
     )
     next_use_date = models.DateTimeField(
         auto_now_add=True,
-        verbose_name='Дата след. показа',
+        verbose_name='next appears date',
     )
     level = models.PositiveIntegerField(
         default=0,
-        verbose_name='Уровень',
+        verbose_name='level',
     )
 
     deck = models.ForeignKey(
@@ -197,5 +213,5 @@ class Card(models.Model):
 
     class Mets:
         ordering = ('-next_use_date',)
-        verbose_name = 'Карточка'
-        verbose_name_plural = 'Карточки'
+        verbose_name = 'Card'
+        verbose_name_plural = 'Cards'

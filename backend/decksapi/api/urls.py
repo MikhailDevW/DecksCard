@@ -10,7 +10,7 @@ router = SimpleRouter()
 router.register('auth/signup', UserSignUp)
 router.register('dashboard', DashboardViewSet)
 router.register(
-    r'dashboard/(?P<deck_id>\d+)/cards',
+    r'dashboard/(?P<slug>\w+)/cards',
     CardsViewSet,
     basename='cards',
 )
