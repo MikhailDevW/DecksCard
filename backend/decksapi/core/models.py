@@ -8,8 +8,8 @@ from django.contrib.auth.models import (
     PermissionsMixin,
     BaseUserManager,
 )
-
 from core.utils import encode_uid
+from PIL import Image
 
 
 class UserRole(models.TextChoices):
@@ -155,11 +155,29 @@ class Deck(models.Model):
         verbose_name_plural = 'Decks'
 
 
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return f'user_{instance.deck.author.id}/{filename}'
+
+
 class Card(models.Model):
     '''
     Данный класс модели поисывает карточку,
     которую видит пользватель.
     '''
+    def image_validator(value):
+        MAX_PIC_DIMENSION = (200, 200)
+        try:
+            with Image.open(value, formats=('PNG', 'JPEG')) as image:
+                if image.size > MAX_PIC_DIMENSION:
+                    raise ValidationError(
+                            'Incorrect image size.'
+                        )
+        except TypeError:
+            raise ValidationError(
+                'Incorrect image format.'
+            )
+
     front_side = models.CharField(
         max_length=settings.CARD_MAX_LENGTH,
         verbose_name='Front',
@@ -176,6 +194,11 @@ class Card(models.Model):
     audio = models.FileField(
         upload_to='audio/',
         blank=True, null=True,
+    )
+    image = models.ImageField(
+        upload_to=user_directory_path,
+        blank=True, null=True,
+        validators=[image_validator],
     )
     example = models.TextField(
         blank=True,
@@ -202,6 +225,10 @@ class Card(models.Model):
 
     def __str__(self) -> str:
         return self.front_side
+
+    def delete(self, *args, **kwargs):
+        self.image.delete()
+        super().delete(*args, **kwargs)
 
     class Mets:
         ordering = ('-next_use_date',)

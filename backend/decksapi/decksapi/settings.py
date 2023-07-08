@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import environ
 from datetime import timedelta
@@ -95,6 +96,8 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -129,7 +132,7 @@ SIMPLE_JWT = {
 }
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = BASE_DIR / "mail"  # change this to a proper location
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'mail')
 
 SEND_CONFIRM_EMAIL = True
 EMAIL_LENGTH = 100

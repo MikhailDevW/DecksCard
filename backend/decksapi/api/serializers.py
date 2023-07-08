@@ -1,3 +1,5 @@
+from PIL import Image
+
 from django.conf import settings
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
@@ -24,6 +26,11 @@ class DeckSerializer(serializers.ModelSerializer):
 
 
 class CardSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(
+            max_length=None,
+            use_url=True,
+    )
+
     class Meta:
         fields = (
             'id',
@@ -33,8 +40,23 @@ class CardSerializer(serializers.ModelSerializer):
             'example',
             'level',
             'next_use_date',
+            'image',
         )
         model = Card
+
+    def validate_image(self, value):
+        MAX_PIC_DIMENSION = (200, 200)
+        try:
+            with Image.open(value, formats=('PNG', 'JPEG')) as image:
+                if image.size > MAX_PIC_DIMENSION:
+                    raise serializers.ValidationError(
+                            'Incorrect image size. SerializerValidation.'
+                        )
+        except TypeError:
+            raise serializers.ValidationError(
+                'Incorrect image format. Serializer validation.'
+            )
+        return value
 
 
 class SignUpSerializer(serializers.ModelSerializer):
