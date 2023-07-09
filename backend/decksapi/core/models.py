@@ -18,6 +18,22 @@ class UserRole(models.TextChoices):
     ADMIN = 'ADMIN', 'Site admin'
     SUPERUSER = 'SUPERUSER', 'Superuser'
 
+from core.utils import encode_uid
+
+
+class UserRole(models.TextChoices):
+    USER = 'USER', 'Common user'
+    PREMIUM_USER = 'PREMIUM', 'Premium user'
+    ADMIN = 'ADMIN', 'Site admin'
+    SUPERUSER = 'SUPERUSER', 'Superuser'
+
+
+class UserRole(models.TextChoices):
+    USER = 'USER', 'Common user'
+    PREMIUM_USER = 'PREMIUM', 'Premium user'
+    ADMIN = 'ADMIN', 'Site admin'
+    SUPERUSER = 'SUPERUSER', 'Superuser'
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username=None, password=None, **extra_fields):
