@@ -2,13 +2,16 @@ from django.urls import path, include, re_path
 from rest_framework.routers import SimpleRouter
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .views import CardsViewSet, DashboardViewSet, UserSignUp, ConfirmCodeView
+from .views import (
+    CardsViewSet, DashboardViewSet, ProfileViewSet, UserSignUp, ConfirmCodeView
+)
 from .serializers import MyTokenObtainPairSerializer
 
 
 router = SimpleRouter()
 router.register('auth/signup', UserSignUp)
 router.register('dashboard', DashboardViewSet)
+router.register('profile', ProfileViewSet, basename='profile')
 router.register(
     r'dashboard/(?P<slug>\w+)/cards',
     CardsViewSet,

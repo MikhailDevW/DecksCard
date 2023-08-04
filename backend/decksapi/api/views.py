@@ -16,7 +16,8 @@ from core.utils import Mail
 from .mixins import CreateViewSet
 from .permissions import OwnerOnly
 from .serializers import (
-    CardSerializer, ConfirmCodeSerializer, DeckSerializer, SignUpSerializer
+    CardSerializer, ConfirmCodeSerializer, DeckSerializer, ProfileSerializer,
+    SignUpSerializer
 )
 from core.utils import decode_uid, encode_uid
 
@@ -42,6 +43,18 @@ class UserSignUp(CreateViewSet):
         )
         user_uid = encode_uid(user.id)
         user_code = default_token_generator.make_token(user)
+
+        # создание колоды как примера работы сервиса
+        example_deck = Deck.objects.create(
+            title='Example (RU_EN)',
+            author=user,
+        )
+        # objs = example_deck.objects.bulk_create(
+        #     [
+        #         Card(front_side='кошка', back_side='cat'),
+        #         Card(front_side='собака', back_side='dog'),
+        #     ]
+        # )
 
         if settings.SEND_CONFIRM_EMAIL:
             mail = Mail(
@@ -131,3 +144,42 @@ class CardsViewSet(viewsets.ModelViewSet):
         cards = self._get_deck().cards.all()
         serializer = CardSerializer(cards, many=True)
         return Response(serializer.data)
+
+
+class ProfileViewSet(viewsets.ModelViewSet):
+    """
+    Профиль пользователя.
+    Методы: GET, PATCH
+    """
+    queryset = CustomUser.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = (permissions.IsAdminUser,)
+    # lookup_field = 'username'
+    # pagination_class = PageNumberPagination
+    # filter_backends = (filters.SearchFilter,)
+    # search_fields = ('username',)
+
+    @action(
+        methods=['patch', 'get'],
+        detail=False,
+        permission_classes=(permissions.IsAuthenticated,),
+        url_path='me',
+        url_name='me'
+    )
+    def me(self, request, *args, **kwargs):
+        instance = self.request.user
+        serializer = self.get_serializer(instance)
+        if self.request.method == 'PATCH':
+            serializer = self.get_serializer(
+                instance,
+                data=request.data,
+                partial=True
+            )
+            if not serializer.is_valid():
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            serializer.save(role=instance.role)
+            return Response(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
