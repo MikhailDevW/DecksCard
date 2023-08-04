@@ -48,12 +48,13 @@ class CardSerializer(serializers.ModelSerializer):
         model = Card
 
     def validate_image(self, value):
-        MAX_PIC_DIMENSION = (200, 200)
+        MAX_PIC_DIMENSION = (700, 700)
         try:
             with Image.open(value, formats=('PNG', 'JPEG')) as image:
                 if image.size > MAX_PIC_DIMENSION:
                     raise serializers.ValidationError(
-                            'Incorrect image size. SerializerValidation.'
+                            'Incorrect image size.'
+                            f'More than {MAX_PIC_DIMENSION}.'
                         )
         except TypeError:
             raise serializers.ValidationError(
