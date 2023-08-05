@@ -1,18 +1,19 @@
 import os
 from pathlib import Path
-import environ
 from datetime import timedelta
 
-
-env = environ.Env(
-    DEBUG=(bool, False)
-)
-environ.Env.read_env()
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = env('SECRET_KEY')
-DEBUG = env('DEBUG')
-ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(',')
+load_dotenv(
+    dotenv_path=os.path.join(
+        BASE_DIR, 'decksapi', '.env'
+    )
+)
+
+SECRET_KEY = os.getenv('SECRET_KEY')
+DEBUG = os.getenv('DEBUG') == 'True'
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(',')
 
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -70,8 +71,8 @@ WSGI_APPLICATION = 'decksapi.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': env('DB_ENGINE'),
-        'NAME': BASE_DIR / env('DB_NAME'),
+        'ENGINE': os.getenv('DB_ENGINE'),
+        'NAME': BASE_DIR / os.getenv('DB_NAME'),
     }
 }
 
@@ -91,8 +92,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 AUTH_USER_MODEL = 'core.CustomUser'
 
-LANGUAGE_CODE = env('LANGUAGE_CODE')
-TIME_ZONE = env('TIME_ZONE')
+LANGUAGE_CODE = os.getenv('LANGUAGE_CODE')
+TIME_ZONE = os.getenv('TIME_ZONE')
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
