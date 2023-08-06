@@ -27,9 +27,15 @@ function CurrentDeck(props) {
   }, [currentDeck])
 
   useEffect(() => {
+   console.log(currentDeck);
+   console.log(arrToSearch)
+  }, [currentDeck])
+
+  useEffect(() => {
     if (deckCards && deckCards !== null &&  deckCards.length !== 0)
-    {setArrToSearch(deckCards)}
-  }, [deckCards])
+    {setArrToSearch(deckCards)};
+    if (currentDeck && deckCards && deckCards.length === 0) {console.log('0'); setArrToSearch([]);}
+  }, [currentDeck, deckCards])
 
   useEffect(() => {
     console.log(arrToSearch)
@@ -42,6 +48,7 @@ function CurrentDeck(props) {
       console.log(searchForm.search);
       setArrToSearch(deckCards.filter(item => {if (item.front_side.includes(searchForm.search)) return item; else return}));}
     if (searchForm.search === '') setArrToSearch(deckCards);
+    if (currentDeck && deckCards && deckCards.length === 0) {console.log('0'); setArrToSearch([]);}
   }, [searchForm.search])
 
   
