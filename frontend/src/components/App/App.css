@@ -1,8 +1,0 @@
-@import url(../../vendor/fonts.css);
-
-.page {
-  background-color: #FAFAFA;
-  display: flex;
-  flex-direction: column;
-  /*height: calc(100vh);*/
-}
