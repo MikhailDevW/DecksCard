@@ -1,4 +1,5 @@
 from datetime import date
+import smtplib
 
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
@@ -39,7 +40,8 @@ class UserSignUp(CreateViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save(
-            password=make_password(serializer.validated_data['password'])
+            password=make_password(serializer.validated_data['password'],),
+            is_active=True,
         )
         user_uid = encode_uid(user.id)
         user_code = default_token_generator.make_token(user)
@@ -64,15 +66,22 @@ class UserSignUp(CreateViewSet):
             ]
         )
 
-        if settings.SEND_CONFIRM_EMAIL:
-            mail = Mail(
-                serializer.validated_data['email'],
-                user_uid,
-                user_code,
-            )
-            mail.send_message()
+        mail_status = None
+        try:
+            if settings.SEND_CONFIRM_EMAIL:
+                mail = Mail(
+                    serializer.validated_data['email'],
+                    user_uid,
+                    user_code,
+                )
+                mail.send_message()
+        except smtplib.SMTPAuthenticationError:
+            mail_status = 'not sent'
         return Response(
             status=status.HTTP_200_OK,
+            data={
+                'email_sent': mail_status if mail_status is not None else 'OK'
+            }
         )
 
 

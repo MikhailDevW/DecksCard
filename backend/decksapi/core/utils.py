@@ -22,7 +22,7 @@ class Mail:
     def send_message(self):
         send_mail(
             self.subject,
-            f'http://127.0.0.1:8000/api/v1/auth/confirm/{self.uid}/{self.code}/',
+            f'https://decks.mikhailwdev.ru/api/v1/auth/confirm/{self.uid}/{self.code}/',
             self.from_email,
             [self.to],
             fail_silently=False,
