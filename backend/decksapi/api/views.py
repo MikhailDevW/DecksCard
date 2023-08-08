@@ -49,12 +49,20 @@ class UserSignUp(CreateViewSet):
             title='Example (RU_EN)',
             author=user,
         )
-        # objs = example_deck.objects.bulk_create(
-        #     [
-        #         Card(front_side='кошка', back_side='cat'),
-        #         Card(front_side='собака', back_side='dog'),
-        #     ]
-        # )
+        Card.objects.bulk_create(
+            [
+                Card(
+                    front_side='кошка',
+                    back_side='cat',
+                    deck=example_deck
+                ),
+                Card(
+                    front_side='собака',
+                    back_side='dog',
+                    deck=example_deck
+                ),
+            ]
+        )
 
         if settings.SEND_CONFIRM_EMAIL:
             mail = Mail(
