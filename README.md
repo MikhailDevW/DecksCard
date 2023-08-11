@@ -1,4 +1,5 @@
 # DecksCard
+https://decks.mikhailwdev.ru/
 👋 Hello everyone.👋 This is a 'BrainDecks' repositorie, web-application where you can train your memory in foreign words. You can create your own customised decks on your choice by topics, add unknow words and translations for it with definition and prompts. When you press 'Learn' button on certain deck, the words appear in random. The main goal: you should _type_ translation and press 'Answer'. If the word typed correctly you will see green light.
 
 ## Features which auth user can do:
