@@ -14,7 +14,7 @@ def decode_uid(pk):
 class Mail:
     def __init__(self, to, uid, code) -> None:
         self.subject = 'Welcome message.'
-        self.from_email = 'jobhunt21@yandex.ru'
+        self.from_email = 'wildmv@gmail.com'
         self.to = to
         self.uid = uid
         self.code = code
