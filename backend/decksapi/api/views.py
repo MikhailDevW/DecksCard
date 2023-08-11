@@ -12,6 +12,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 
+from core.example_deck import example_deck
 from core.models import Card, CustomUser, Deck
 from core.utils import Mail
 from .mixins import CreateViewSet
@@ -37,36 +38,18 @@ class UserSignUp(CreateViewSet):
     permission_classes = (permissions.AllowAny,)
 
     def create(self, request, *args, **kwargs):
+        signup_status = {}
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save(
             password=make_password(serializer.validated_data['password'],),
-            is_active=True,
+            is_active=True,  # данную возможность отсавляем
+            # пока не работает подтверждение по почте
         )
         user_uid = encode_uid(user.id)
         user_code = default_token_generator.make_token(user)
+        signup_status['example_deck'] = example_deck(user)
 
-        # создание колоды как примера работы сервиса
-        example_deck = Deck.objects.create(
-            title='Example (RU_EN)',
-            author=user,
-        )
-        Card.objects.bulk_create(
-            [
-                Card(
-                    front_side='кошка',
-                    back_side='cat',
-                    deck=example_deck
-                ),
-                Card(
-                    front_side='собака',
-                    back_side='dog',
-                    deck=example_deck
-                ),
-            ]
-        )
-
-        mail_status = None
         try:
             if settings.SEND_CONFIRM_EMAIL:
                 mail = Mail(
@@ -75,12 +58,17 @@ class UserSignUp(CreateViewSet):
                     user_code,
                 )
                 mail.send_message()
-        except smtplib.SMTPAuthenticationError:
-            mail_status = 'not sent'
+        except smtplib.SMTPAuthenticationError as auth_error:
+            signup_status['mail_sent'] = f'Message not sent. Error: {auth_error}'
+            # user.delete()
+        except AssertionError as error:
+            signup_status['mail_sent'] = f'Some sending error occured! {error}'
+            # user.delete()
+
         return Response(
             status=status.HTTP_200_OK,
             data={
-                'email_sent': mail_status if mail_status is not None else 'OK'
+                'signup_status': signup_status
             }
         )
 
