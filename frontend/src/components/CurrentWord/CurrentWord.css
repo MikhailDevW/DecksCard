@@ -1,12 +1,5 @@
-<<<<<<< HEAD
 .currentWord__wordBlock {
   display: flex;
   flex-direction: row;
   gap: 40px;
-=======
-.currentWord__wordBlock {
-  display: flex;
-  flex-direction: row;
-  gap: 40px;
->>>>>>> 6e74c0a3aec6ba4adcc65121d292aafa40b04daf
 }

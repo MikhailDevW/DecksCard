@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 @import url(../../vendor/fonts.css);
 
 .page {
@@ -6,13 +5,4 @@
   display: flex;
   flex-direction: column;
   /*height: calc(100vh);*/
-=======
-@import url(../../vendor/fonts.css);
-
-.page {
-  background-color: #FAFAFA;
-  display: flex;
-  flex-direction: column;
-  /*height: calc(100vh);*/
->>>>>>> 6e74c0a3aec6ba4adcc65121d292aafa40b04daf
 }
