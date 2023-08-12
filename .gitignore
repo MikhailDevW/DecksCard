@@ -155,15 +155,11 @@ cython_debug/
 
 media/
 mail/
-<<<<<<< HEAD
 
 # dependencies
 /node_modules
 /.pnp
 .pnp.js
-
-.idea
-.env
 
 # testing
 /coverage
