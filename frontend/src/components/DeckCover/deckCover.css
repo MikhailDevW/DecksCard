@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @import url(../../vendor/fonts.css);
 
 .deckCover {
@@ -109,4 +110,117 @@
   .main__content {
     padding: 0 10px 0px 10px;
   }
+=======
+@import url(../../vendor/fonts.css);
+
+.deckCover {
+  width: 209px;
+  height: 234px;
+  background-color: #E7E7E7;
+  border-radius: 2px;
+  padding: 1px;
+  border-radius: 5px;
+}
+
+.deckCover:hover {
+  cursor: pointer;
+  opacity: 0.5;
+  transition: 0.5s;
+}
+
+.deckCover__cover {
+  max-width: 169px;
+  width: 169px;
+  height: 198px;
+  background: rgb(0,67,78);
+  background: linear-gradient(90deg, rgba(0,67,78,1) 0%, rgba(12,65,70,1) 39%, rgba(32,106,107,1) 100%);
+  border-radius: 2px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  border-radius: 5px;
+  margin: 2px;
+}
+
+.deckCover__addCover {
+  max-width: 169px;
+  width: 169px;
+  height: 198px;
+  background-color: #8C8C8C;
+  border-radius: 2px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 5px;
+  margin: 2px;
+}
+
+.deckCover__number {
+  margin: 0;
+  color: #7EB4A2;
+  font-size: 22px;
+  font-weight: 700;
+  padding-bottom: 14px;
+}
+
+.deckCover__name {
+  text-overflow: ellipsis;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 27px;
+  margin: 0;
+  color: #E6F6DF;
+  height: 58px;
+  margin-bottom: 18px;
+  white-space: initial;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.deckCover__text {
+  margin: 0;
+  color: #E6F6DF;
+  font-size: 10px;
+}
+
+.deckCover__count {
+  margin: 0;
+  font-weight: 700;
+  font-size: 18px;
+  color: #FF643F;
+}
+
+.deckCover__cover:before {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0px;
+  border-bottom: 50px solid #E7E7E7;
+  border-left: 50px solid rgba(2, 127, 212, 0);
+  border-radius: 5px;
+}
+
+.deckCover__addCover:before {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0px;
+  border-bottom: 50px solid #E7E7E7;
+  border-left: 50px solid #8C8C8C;
+  border-radius: 5px;
+}
+
+/*@media screen and (max-width: 380px) {
+  .main__content {
+    padding: 0 10px 0px 10px;
+  }
+>>>>>>> 6e74c0a3aec6ba4adcc65121d292aafa40b04daf
 }*/

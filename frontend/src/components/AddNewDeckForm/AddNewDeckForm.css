@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @import url(../../vendor/fonts.css);
 
 .addNewDeckForm {
@@ -445,3 +446,452 @@
   scrollbar-color: #7e666d rgb(202 189 170); 
   scrollbar-width: 14px; 
 }
+=======
+@import url(../../vendor/fonts.css);
+
+.addNewDeckForm {
+  /*position: relative;*/
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 50px 20px 50px;
+  margin-left: auto;
+  margin-right: auto;
+  align-self: center;
+  align-items: flex-start;
+}
+
+.editProfileForm__button {
+  width: 396px;
+  height: 45px;
+  color: rgb(255, 255, 255);
+  background: #325c27;
+  border-radius: 3px;
+  font-family: 'Inter';
+  font-weight: 500;
+  font-size: 14px;
+  text-align: center;
+  flex-shrink: 0;
+  margin-top: 100px;
+  border: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  align-self: center;
+  display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.addNewDeckForm__title {
+  line-height: 50px;
+  font-size: 48px;
+  font-weight: 700px;
+}
+
+.addNewDeckForm__container {
+  display: flex;
+  flex-direction: row;
+  align-self: flex-start;
+  gap: 20px;
+}
+
+.addNewDeckForm__form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.addNewDeckForm__addButton {
+  background-color: #3C4548;
+  color: #E6F6DF;
+  height: 58px;
+  width: 158px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 40px;
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.addNewDeckForm__addButton:hover {
+  cursor: pointer;
+  opacity: 0.4;
+  transition: 0.6s;
+}
+
+.addNewDeckForm__button-disabled {
+  background: #3C4548;
+  cursor: default;
+  display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.editProfileForm__button-active:hover {
+  opacity: 0.5;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.addNewDeckForm__title-container {
+  background-color: white;
+  border-radius: 5px;
+  height: 62px;
+  width: 358px;
+  border: ipx solid #9A9090;
+}
+
+.addNewDeckForm__description-container {
+  background-color: white;
+  border-radius: 5px;
+  height: 136px;
+  width: 358px;
+  border: ipx solid #9A9090;
+}
+
+.addNewDeckForm__label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.addNewDeckForm__deck {
+  margin-top: 20px;
+  width: 208px;
+  height: 238px;
+  background-color: #E7E7E7;
+  border-radius: 2px;
+  padding: 1px;
+  border-radius: 5px;
+}
+
+.addNewDeckForm__cover {
+  max-width: 156px;
+  width: 156px;
+  height: 216px;
+  background-color: #8C8C8C;
+  border-radius: 2px;
+  padding: 10px 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  border-radius: 5px;
+}
+
+.addNewDeckForm__cover:before {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0px;
+  border-bottom: 50px solid #E7E7E7;
+  border-left: 50px solid #8C8C8C;
+  border-radius: 5px;
+  background-color: #8C8C8C;
+}
+
+.addNewDeckForm__cover:before {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0px;
+  border-bottom: 50px solid #E7E7E7;
+  border-left: 50px solid #8C8C8C;
+  border-radius: 5px;
+}
+
+.addNewDeckForm__text {
+  font-family: 'Inter';
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 36px;
+  color: #000000;
+  margin: 0;
+}
+
+.addNewDeckForm__description-text {
+  font-family: 'Inter';
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  color: #000000;
+  margin: 0;
+}
+
+
+
+.profile__content {
+  display: flex;
+  flex-direction: row;
+  gap: 60px;
+  align-self: center;
+}
+
+@media screen and (max-width: 966px) {
+  .profile__content {
+    flex-direction: column;
+  }
+}
+
+.profile__calendar-block {
+  flex-direction: column;
+  display: flex;
+  align-content: center;
+  align-items: center;
+}
+
+.profile__plants-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding-left: 0;
+  overflow-y: scroll;
+}
+
+.editProfileForm__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-content: center;
+  flex-basis: auto;
+  align-self: center;
+  z-index: 2;
+  max-width: 410px;
+  height: 460px;
+  padding: 30px 0px 30px 0px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  position: relative;
+  align-items: center;
+  gap: 4px;
+}
+
+.profile__title {
+  font-family: 'Inter';
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  margin: 0;
+  color: rgb(0, 0, 0);
+  margin: 0;
+  padding-bottom: 50px;
+  padding-top: 50px;
+  text-align: center;
+  align-self: center;
+} 
+
+.profile__edit-link {
+  font-family: 'Inter';
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13px;
+  color: #b3b2b2;
+  margin: 0;
+}
+
+.profile__underbottom-text {
+  font-family: 'Inter';
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+  color: #000000;
+  margin: 0;
+}
+
+@media screen and (max-width: 500px) {
+  .profile__underbottom-text {
+    font-size: 12px;
+    line-height: 15px;
+  }
+}
+
+@media screen and (max-width: 770px) {
+  .editProfileForm__container {
+    padding: 40px 0px 40px 0px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .editProfileForm__container {
+    padding: 40px 20px 40px 20px;
+  }
+}
+
+@media screen and (max-width: 770px) {
+  .profile__title {
+    padding-bottom: 30px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .profile__title {
+    padding-bottom: 25px;
+  }
+}
+
+.profile__link {
+  text-decoration: none;
+  border: none;
+}
+
+.profile__link-disabled {
+  text-decoration: none;
+  border: none;
+  color: #A0A0A0;
+  background-color: #FAFAFA;
+}
+
+.profile__link:hover {
+  opacity: 0.4;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.profile__link-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding-top: 30px;
+  gap: 30px;
+  align-items: center;
+}
+
+@media screen and (max-width: 770px) {
+  .profile__link-container {
+    padding-top: 50px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .profile__link-container {
+    padding-top: 40px;
+    flex-direction: column;
+  }
+}
+
+.profile__row-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border: none;
+  background-color: #f6f6e9;
+  border-radius: 15px;
+  height: 40px;
+  position: relative;
+  padding-left: 15px;
+  color: #7e666d;
+  width: 360px;
+}
+
+@media screen and (max-width: 420px) {
+  .profile__row-container {
+    width: 270px;
+  }
+}
+
+.profile__row-container:-webkit-autofill,
+.profile__row-container:-webkit-autofill:hover,
+.profile__row-container:-webkit-autofill:focus,
+.profile__row-container:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #FAFAFA inset !important;
+}
+
+.profile__row-container:focus-visible {
+  outline: #E6E6E6 auto 0px;
+}
+
+.profile__input-error {
+  min-height: 16px;
+  color: #FF004D;
+}
+
+.profile__row-container::-webkit-input-placeholder {
+  color: black;
+}
+
+.profile__row-container:focus {
+  border: none;
+}
+
+.profile__span-userName-text {
+  text-align: end;
+  position: absolute;
+  top: 228px;
+  right: 0;
+  z-index: 2;
+}
+
+.profile__span-email-text {
+  text-align: end;
+  position: absolute;
+  top: 276px;
+  right: 0;
+  z-index: 2;
+}
+
+@media screen and (max-width: 770px) {
+  .profile__span-userName-text {
+    top: 363px;
+  }
+}
+
+@media screen and (max-width: 770px) {
+  .profile__span-email-text {
+    top: 411px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .profile__span-userName-text {
+    top: 181px;
+    right: 30px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .profile__span-email-text {
+    top: 228px;
+    right: 30px;
+  }
+}
+
+.profile__text-error {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #A0A0A0;
+  margin: 0;
+  text-align: center;
+}
+
+@media screen and (max-width: 500px) {
+  .profile__text-error {
+    font-size: 12px;
+    line-height: 15px;
+  }
+}
+
+.scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: calc(100vh - 480px);
+  overflow-y: auto;
+}
+
+.scroll::-webkit-scrollbar {
+  width: 8px;
+  background-color: rgb(202 189 170);
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  background-color: #7e666d;
+}
+
+.scroll {
+  scrollbar-color: #7e666d rgb(202 189 170); 
+  scrollbar-width: 14px; 
+}
+>>>>>>> 6e74c0a3aec6ba4adcc65121d292aafa40b04daf
