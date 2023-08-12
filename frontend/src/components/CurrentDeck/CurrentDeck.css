@@ -1,0 +1,344 @@
+@import url(../../vendor/fonts.css);
+
+@keyframes ani {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+.currentDeck1 {
+  display: flex;
+  gap: 27px;
+  flex-direction: column;
+}
+
+.currentDeck {
+  max-width: 648px;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  background: rgb(0,67,78);
+  background: linear-gradient(90deg, rgba(0,67,78,1) 0%, rgba(22,45,65,1) 8%, rgba(2,63,88,1) 16%, rgba(0,83,107,1) 24%, rgba(0,104,122,1) 34%, rgba(0,125,131,1) 43%, rgba(0,146,133,1) 52%, rgba(0,166,130,1) 62%, rgba(66,185,122,1) 72%, rgba(119,203,111,1) 82%, rgba(170,219,99,1) 91%, rgba(223,232,91,1) 100%);
+  margin-top: 60px;
+}
+
+.currentDeck__dotsBlock {
+  display: flex;
+  flex-direction: row;
+  justify-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.currentDeck__number {
+  color: #7EB4A2;
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.currentDeck__dots-img {
+  width: 40px;
+  height: 10px;
+}
+
+.currentDeck__plus-img {
+  width: 20px;
+  height: 20px;
+  margin-left: 18px;
+}
+
+.currentDeck__menu {
+  position: absolute;
+  background-color: white;
+  width: 139px;
+  right: -24px;
+  top: 20px;
+  padding: 0 13px;
+}
+
+.currentDeck__menuText {
+  color: #162030;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  margin: 13px 0;
+}
+
+.currentDeck__menuText:first-of-type {
+  border-bottom: 0.5px solid rgb(197, 194, 194);
+  padding-bottom: 13px;
+}
+
+.currentDeck__dots-img:hover {
+  opacity: 0.5;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.currentDeck__title {
+  font-family: 'Inter', sans-serif;
+  color: #EAFFE0;
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 44px;
+  margin: 0;
+  padding-bottom: 23px;
+}
+
+.currentDeck__input-container {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+.currentDeck__options {
+  position: absolute;
+  background-color: white;
+  display: none;
+  top: 37px;
+  min-width: 90px;
+}
+
+.currentDeck__input {
+  display: block;
+  height: 38px;
+  width: 500px;
+  border-radius: 5px 0 0 5px;
+  padding-left: 20px;
+  background-color: #E6F6DF;
+  border: none;
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.2);
+  margin-bottom: 15px;
+}
+
+.currentDeck__find-img {
+  height: 40px;
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.2);
+  border-radius: 0px 5px 7px 0;
+}
+
+.cardsHolder__form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 80%;
+  padding-top: 30px;
+}
+
+.cardsHolder__wordsContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 15px;
+  background-color: white;
+  border: 0.5px solid #E6E6E6;
+  padding: 20px 40px;
+}
+
+.currentDeck__word {
+  background-color: #FEF0E6;
+  color: #A33C00;
+  font-size: 24px;
+  line-height: 24px;
+  padding: 4px 4px 8px;
+  font-weight: 700;
+  border-radius: 5px;
+  min-width: 70px;
+  text-align: center;
+}
+
+.currentDeck__word:hover {
+  cursor: pointer;
+  opacity: 0.4;
+  transition: 0.8s;
+}
+
+.currentDeck__button-container {
+  display: flex;
+  gap: 40px;
+}
+
+.currentDeck__repeatButton {
+  background-color: #3C4548;
+  color: #E6F6DF;
+  height: 58px;
+  width: 158px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 40px;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 50px;
+}
+
+.currentDeck__repeatButton:hover {
+  opacity: 0.5;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+@media screen and (max-width: 570px) {
+  .cardsHolder__input {
+    padding-left: 15px;
+    min-width: 250px;
+  }
+}
+
+.cardsHolder__input_active {
+  background-color: rgb(148, 228, 126);
+} 
+
+.cardsHolder__input_active:focus { 
+  background-color: rgb(148, 228, 126);
+}
+.cardsHolder__input_active:active { 
+  font-weight: bold;
+  background-color: rgb(148, 228, 126); 
+}
+
+.cardsHolder__card {
+  display: flex;
+  flex-direction: row;
+  justify-items: end;
+  align-items: center;
+  background-color: rgb(241, 245, 227);
+  border-radius: 20px;
+  border: 1px solid rgb(208, 205, 205);
+  margin: 20px 0;
+  gap: 10px;
+  width: 350px;
+  padding: 5px 15px;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 570px) {
+  .cardsHolder__card {
+    width: 250px;
+  }
+}
+
+.cardsHolder__card p {
+  margin: 0;
+  width: 100px;
+}
+
+.cardsHolder__button1 {
+  margin-top: 20px;
+}
+
+.cardsHolder__button-block {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+@media screen and (max-width: 570px) {
+  .cardsHolder__button-block {
+    flex-direction: column;
+  }
+}
+
+.currentDeck__subtitle {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 27px;
+  margin: 0;
+  padding-bottom: 23px;
+}
+
+.cardsHolder__pensil {
+  width: 25px;
+  height: 25px;
+}
+
+.cardsHolder__pensil:hover {
+  opacity: 0.5;
+  cursor: pointer;
+  transition: 0.5s ease;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /*height: 100vh;*/
+  margin: 30px;
+}
+
+.container img {
+  width: 120px;
+  height: 120px;
+  margin-top: 20px;
+}
+
+.btn {
+  text-decoration: none;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  height: 40px;
+  width: 200px;
+  font-weight: 600;
+  border-radius: 20px;
+}
+
+.btn:hover {
+  box-shadow: 1px 1px 25px 10px rgba(183, 234, 64, 0.4);
+  background: linear-gradient(to right, rgb(229, 255, 192), transparent, rgb(229, 255, 192));
+  text-shadow: #333;
+  transition: all .5s;
+  transform: scale(1.1);
+  border: none;
+}
+
+.aboutMe__button:hover:after{
+  width: 100%;
+}
+
+.aboutMe__res-img {
+  opacity: 0;
+  animation: ani 2s forwards;
+  /*transition: all .5s;*/
+}
+
+@media screen and (max-width: 770px) {
+  .cardsHolder__text {
+    font-size: 14px;
+    line-height: 22px;
+    max-width: 364px;
+  }
+}
+
+@media screen and (max-width: 770px) {
+  .cardsHolder__text {
+    font-size: 14px;
+    line-height: 22px;
+    max-width: 364px;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .cardsHolder__text-block {
+    flex-direction: column-reverse;
+    padding-top: 60px;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .cardsHolder__text {
+    padding-right: 0;
+    font-size: 11px;
+    line-height: 16px;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .cardsHolder__title {
+    padding-bottom: 28px;
+    font-size: 18px;
+    line-height: 22px;
+  }
+}

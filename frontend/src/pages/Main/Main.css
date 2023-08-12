@@ -1,0 +1,39 @@
+@import url(../../vendor/fonts.css);
+
+.main__content {
+  /*max-width: 820px;*/
+  padding: 0 20px 0px 20px;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+  max-width: 1332px;
+}
+
+@media screen and (max-width: 990px) {
+  .main {
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 620px) {
+  .main__content {
+    align-self: inherit;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .main__content {
+    padding: 0 10px 0px 10px;
+  }
+}
+
+.main__deckContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+}
