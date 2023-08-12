@@ -157,16 +157,3 @@ function CurrentDeck(props) {
 }  
 
 export default CurrentDeck;
-
-/*
-            <div className="currentDeck__options">
-              {((arrToSearch !== [] )  
-              && arrToSearch1.map((item, i) => (
-                <>
-                  <option key={i} value={item}>
-                    {item}
-                  </option>
-                </>
-              )))}
-            </div>
-            */

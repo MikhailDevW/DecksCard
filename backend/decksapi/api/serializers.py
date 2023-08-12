@@ -53,8 +53,7 @@ class CardSerializer(serializers.ModelSerializer):
             with Image.open(value, formats=('PNG', 'JPEG')) as image:
                 if image.size > MAX_PIC_DIMENSION:
                     raise serializers.ValidationError(
-                            'Incorrect image size.'
-                            f'More than {MAX_PIC_DIMENSION}.'
+                            'Incorrect image size. SerializerValidation.'
                         )
         except TypeError:
             raise serializers.ValidationError(
