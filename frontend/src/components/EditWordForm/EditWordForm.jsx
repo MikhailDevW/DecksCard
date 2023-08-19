@@ -11,11 +11,11 @@ function EditWordForm (props) {
   const { currentDeck, currentWord } = useSelector(state => state.currentDeckReducer);
   const [form, setValue] = useState({front_side: '', back_side: '', prompt: '', example: '' });
   const [deckSlug, setDeckSlug] = useState('');
-  const titleInput = document.getElementById('titleAddFormInput');
-  const descriptionInput = document.getElementById('descriptionAddFormInput');
-  const submitButton = document.getElementById('buttonSubmitAddForm');
-  const titleErrorSpan = document.getElementById('titleSpanAddForm');
-  const descriptionErrorSpan = document.getElementById('descriptionSpanAddForm');
+  const titleInput = document.getElementById('titleEditFormInput');
+  const descriptionInput = document.getElementById('descriptionEditFormInput');
+  const submitButton = document.getElementById('buttonSubmitEditWordForm');
+  const titleErrorSpan = document.getElementById('titleSpanEditForm');
+  const descriptionErrorSpan = document.getElementById('descriptionSpanEditForm');
 
   /*function validate() {
     if(titleInput && descriptionInput && !(titleInput.validationMessage || descriptionInput.validationMessage)) 
@@ -76,7 +76,7 @@ function EditWordForm (props) {
             <input 
               required 
               name="front_side"
-              id='titleAddFormInput'
+              id='titleEditFormInput'
               type="text" 
               value={form.front_side}
               onChange={e => {
@@ -93,7 +93,7 @@ function EditWordForm (props) {
             TRANSLATION
             <input
               name="back_side" 
-              id='descriptionAddFormInput'
+              id='transcriptionEditFormInput'
               type="text" 
               value={form.back_side}
               onChange={e => {
@@ -110,7 +110,7 @@ function EditWordForm (props) {
             DESCRIPTION OR PROMPT
             <input
               name="prompt" 
-              id='descriptionAddFormInput'
+              id='descriptionEditFormInput'
               type="text" 
               value={form.prompt}
               onChange={e => {
@@ -127,7 +127,7 @@ function EditWordForm (props) {
             EXAMPLES OF USING
             <input
               name="example" 
-              id='descriptionAddFormInput'
+              id='examplesEditFormInput'
               type="text" 
               value={form.example}
               onChange={e => {
@@ -143,7 +143,7 @@ function EditWordForm (props) {
           <button 
             type="submit" 
             className="addNewDeckForm__addButton addNewDeckForm__button-disabled" 
-            id='buttonSubmitAddWordForm'>
+            id='buttonSubmitEditWordForm'>
             SAVE
           </button>
         </form>

@@ -14,6 +14,7 @@ import {
   DELETE_DECK,
   DELETE_DECK_FAILED,
   DELETE_DECK_SUCCESS,
+  REMOVE_DECK_INFO,
 
   ADD_CARD,
   ADD_CARD_FAILED,
@@ -232,6 +233,35 @@ export const cardsReducer = (state = initialState, action) => {
         ...state, 
         editCardRequestFailed: true, 
         editCardRequest: false 
+      };
+    }
+    case REMOVE_DECK_INFO: {
+      console.log("remove");
+      return {
+        decksRequest: false,
+        decksRequestFailed: false,
+        decks: null,
+        addDeckRequest: false,
+        addDeckRequestFailed: false,
+        addDeckRequestRes: null,
+        editDeckRequest: false,
+        editDeckRequestFailed: false,
+        editDeckRequestRes: null,
+        removeDeckRequest: false,
+        removeDeckRequestFailed: false,
+        removeDeckRequestRes: null,
+        addCardRequest: false,
+        addCardRequestFailed: false,
+        addCardRequestRes: null,
+        editCardRequest: false,
+        editCardRequestFailed: false,
+        editCardRequestRes: null,
+        removeCardRequest: false,
+        removeCardRequestFailed: false,
+        removeCardRequestRes: null,
+        getDeckCardsRequest: false,
+        getDeckCardsRequestFailed: false,
+        deckCards: null
       };
     }
     default: {

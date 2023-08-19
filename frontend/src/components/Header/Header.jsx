@@ -3,11 +3,18 @@ import './Header.css';
 import React from "react";
 
 function Header(props) {
-  const {loggedIn, handleLogout} = props;
+  const {loggedIn, handleLogout, closeRepeatMode, repeatMode } = props;
+
+  function closeRepeatMode1() {
+    if (repeatMode) {
+      closeRepeatMode()}
+  }
 
   return (
     <header className="header">
-      <h1 className="header__title"><span>BrainDecks. </span>Excellent place to memorize words</h1>
+      <h1
+        onClick={closeRepeatMode1}
+        className="header__title" ><span className={repeatMode ? "header__title3" : "header__title2"}>BrainDecks. </span>Excellent place to memorize words</h1>
       {loggedIn && 
         <button
           onClick={handleLogout}

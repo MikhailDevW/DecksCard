@@ -41,7 +41,7 @@ function App() {
     if (decks === null) {
       console.log('not LoggedIn');
       setLoggedIn(false);}
-    else {console.log(loggedIn);
+    if (localStorage.getItem('token') !== undefined && localStorage.getItem('token') !== null && decks !== null) {console.log(loggedIn);
       setLoggedIn(true);
     }
   }, [decks])
@@ -161,26 +161,3 @@ function App() {
 }
 
 export default App;
-
-/*
-            <Route path="/catalog/:plantID" element={<PlantPage loggedIn={loggedIn}/>} />
-            <Route 
-              exact path="/profile" 
-              element={
-                <ProtectedRoute 
-                loggedIn={loggedIn}>
-                  <Profile 
-                    loggedIn={loggedIn}
-                    setLoggedIn={setLoggedIn}
-                    closeModal={closeModal}
-                    editUserModalIsOpen={editUserModalIsOpen}
-                    setEditUserModalIsOpen={setEditUserModalIsOpen}
-                    editFlowerModalIsOpen={editFlowerModalIsOpen}
-                    setEditFlowerModalIsOpen={setEditFlowerModalIsOpen}
-                    addFlowerModalIsOpen={addFlowerModalIsOpen}
-                    setAddFlowerModalIsOpen={setAddFlowerModalIsOpen}
-                    userErrorMessage={userErrorMessage}
-                    setUserErrorMessage={setUserErrorMessage} />
-                </ProtectedRoute>}>      
-            </Route>
-            */

@@ -16,6 +16,7 @@ import {
   DELETE_DECK,
   DELETE_DECK_FAILED,
   DELETE_DECK_SUCCESS,
+  REMOVE_DECK_INFO,
 
   ADD_CARD,
   ADD_CARD_FAILED,
@@ -187,30 +188,6 @@ export function addNewCard(deckID, data) {
   }
 }
 
-/*export function addNewDeck(data) {
-  return function(dispatch) {
-    dispatch({
-      type: ADD_DECK
-    })
-    api.addNewDeck(data).then( res  => {
-      if (res) {
-        dispatch({
-          type: ADD_DECK_SUCCESS,
-          newDeck: res
-        })
-      } else {
-        dispatch({
-          type: ADD_DECK_FAILED
-        })
-      }
-    }).catch( err => {
-      dispatch({
-        type: ADD_DECK_FAILED
-      })
-    })
-  }
-}*/
-
 export function editCard(deckID, cardID, data) {
   return function(dispatch) {
     dispatch({
@@ -332,4 +309,10 @@ export function getCardInfo(deckID, cardID) {
       })
     })
   }
-} 
+}
+
+export function removeAllDecksData() {
+  return {
+    type: REMOVE_DECK_INFO
+  }
+}

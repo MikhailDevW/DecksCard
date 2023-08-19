@@ -34,7 +34,8 @@ function CardsHolder({setAddDeckModalIsOpen}) {
 
   function getText() {
     if (decks && decks.length === 0) return "You've got no saved decks. Time to add one";
-    if (decks && decks.length !== 0) return `You've got ${decks.length} saved decks`;
+    if (decks && decks.length === 1) return `You've got ${decks.length} saved deck`;
+    if (decks && decks.length !== 0 && decks.length !== 1) return `You've got ${decks.length} saved decks`;
   };
 
   const onAddNewDeckChange = e => {
@@ -82,54 +83,3 @@ function CardsHolder({setAddDeckModalIsOpen}) {
 }  
 
 export default CardsHolder;
-
-/*
-
-      {repeatMode && 
-      <div className='cardsHolder__form'>
-        <div>
-          {word()}
-        </div>
-        <input 
-          placeholder="Место для правильного значения" 
-          value={repeatingForm.word} 
-          id='cardsHolderRepeatingInput'
-          type="text"
-          name="word" 
-          onChange={onRepeatChange}
-          required
-          className='cardsHolder__input'
-          autoComplete="off" />
-        <div className='cardsHolder__button-block'>
-          <button 
-            className='cardsHolder__button'
-            onClick={showTranslation}>
-              Показать слово
-          </button>
-          <button 
-            className='cardsHolder__button'
-            onClick={stopRepeating}>
-              Закончить
-          </button>
-          <button 
-            className='cardsHolder__button'
-            onClick={nextWord1}>
-              Следующая
-          </button>
-        </div>
-      </div>}
-      <div>
-      {showCards && decks !== [] && decks.map((currentItem, i) => (
-        <DeckCover key={i} item1={currentItem}/>
-        ))
-      }
-      </div>
-
-      {showCards && decks !== [] && 
-        <button 
-          className='cardsHolder__button cardsHolder__button1'
-          onClick={hideAllCards}>
-            Скрыть
-        </button>
-      }
-      */
