@@ -12,7 +12,10 @@ load_dotenv(
 )
 
 SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.getenv('DEBUG') == 'True'
+DEBUG = os.getenv(
+    'DEBUG',
+    default='False'
+) == 'True'
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(',')
 
 DJANGO_APPS = [
@@ -153,7 +156,7 @@ SIMPLE_JWT = {
 # EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 # EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'mail')
 
-SEND_CONFIRM_EMAIL = True
+SEND_CONFIRM_EMAIL = False
 EMAIL_LENGTH = 100
 NAME_LENGTH = 150
 

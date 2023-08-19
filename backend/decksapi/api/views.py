@@ -33,7 +33,7 @@ class UserSignUp(CreateViewSet):
     Поля email и должны быть уникальными.
     Методы: только POST
     """
-    queryset = CustomUser.objects.all()
+    queryset = CustomUser.objects.select_related().all()
     serializer_class = SignUpSerializer
     permission_classes = (permissions.AllowAny,)
 
@@ -108,15 +108,19 @@ class DashboardViewSet(viewsets.ModelViewSet):
     Methods: GET, POST, PUT, PATCH, DELETE.
     Only owner can edit the Deck.
     """
-    queryset = Deck.objects.all()
+    queryset = Deck.objects.select_related('ghjg').all()
     serializer_class = DeckSerializer
     lookup_field = 'slug'
 
     def get_queryset(self):
-        return self.request.user.decks.all()
+        return (
+            self.request.user.decks.select_related('author').all()
+        )
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer.save(
+            author=self.request.user
+        )
 
 
 class CardsViewSet(viewsets.ModelViewSet):
