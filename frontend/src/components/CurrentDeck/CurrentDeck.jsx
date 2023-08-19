@@ -27,25 +27,14 @@ function CurrentDeck(props) {
   }, [currentDeck])
 
   useEffect(() => {
-   console.log(currentDeck);
-   console.log(arrToSearch)
-  }, [currentDeck])
-
-  useEffect(() => {
     if (deckCards && deckCards !== null &&  deckCards.length !== 0)
     {setArrToSearch(deckCards)};
     if (currentDeck && deckCards && deckCards.length === 0) {console.log('0'); setArrToSearch([]);}
   }, [currentDeck, deckCards])
 
   useEffect(() => {
-    console.log(arrToSearch)
-  }, [arrToSearch])
-
-  useEffect(() => {
     /*setArrToSearch(arrToSearch.map(item => item.test(searchForm.search)))*/
     if (deckCards && deckCards !== null) {
-      console.log(arrToSearch);
-      console.log(searchForm.search);
       setArrToSearch(deckCards.filter(item => {if (item.front_side.includes(searchForm.search)) return item; else return}));}
     if (searchForm.search === '') setArrToSearch(deckCards);
     if (currentDeck && deckCards && deckCards.length === 0) {console.log('0'); setArrToSearch([]);}
@@ -74,7 +63,6 @@ function CurrentDeck(props) {
   }
 
   function chooseWord(item) {
-    console.log(item);
     dispatch(setCurrentWord(item));
   }
 
@@ -169,16 +157,3 @@ function CurrentDeck(props) {
 }  
 
 export default CurrentDeck;
-
-/*
-            <div className="currentDeck__options">
-              {((arrToSearch !== [] )  
-              && arrToSearch1.map((item, i) => (
-                <>
-                  <option key={i} value={item}>
-                    {item}
-                  </option>
-                </>
-              )))}
-            </div>
-            */

@@ -11,8 +11,9 @@ function AddNewWordForm (props) {
   const { currentDeck } = useSelector(state => state.currentDeckReducer);
   const [form, setValue] = useState({front_side: '', back_side: '', prompt: '', example: '' });
   const [deckSlug, setDeckSlug] = useState('');
-  const titleInput = document.getElementById('titleAddFormInput');
-  const descriptionInput = document.getElementById('descriptionAddFormInput');
+  const titleInput = document.getElementById('wordAddFormInput');
+  const transcriptionInput = document.getElementById('translationAddWordFormInput');
+  const descriptionInput = document.getElementById('descriptionAddWordFormInput');
   const submitButton = document.getElementById('buttonSubmitAddForm');
   const titleErrorSpan = document.getElementById('titleSpanAddForm');
   const descriptionErrorSpan = document.getElementById('descriptionSpanAddForm');
@@ -72,7 +73,7 @@ function AddNewWordForm (props) {
             <input 
               required 
               name="front_side"
-              id='titleAddFormInput'
+              id='wordAddFormInput'
               type="text" 
               value={form.front_side}
               onChange={e => {
@@ -89,7 +90,7 @@ function AddNewWordForm (props) {
             TRANSLATION
             <input
               name="back_side" 
-              id='descriptionAddFormInput'
+              id='translationAddWordFormInput'
               type="text" 
               value={form.back_side}
               onChange={e => {
@@ -106,7 +107,7 @@ function AddNewWordForm (props) {
             DESCRIPTION OR PROMPT
             <input
               name="prompt" 
-              id='descriptionAddFormInput'
+              id='descriptionAddWordFormInput'
               type="text" 
               value={form.prompt}
               onChange={e => {
@@ -123,7 +124,7 @@ function AddNewWordForm (props) {
             EXAMPLES OF USING
             <input
               name="example" 
-              id='descriptionAddFormInput'
+              id='exampleAddFormInput'
               type="text" 
               value={form.example}
               onChange={e => {

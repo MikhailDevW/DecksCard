@@ -1,6 +1,4 @@
-export const bazeUrl = "http://decksapi.pythonanywhere.com/api";
-// http://185.22.61.183/api/v1/dashboard/
-// http://decksapi.pythonanywhere.com/api/v1/auth/signup/
+export const bazeUrl = "https://decks.mikhailwdev.ru/api";
 
 export const ERROR_MESSAGE = {
   DATA_RECEIVE_ERROR: 'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.',
@@ -50,10 +48,7 @@ export const SEND_REFRESH_TOKEN_REQUEST = 'SEND_REFRESH_TOKEN_REQUEST';
 export const SEND_REFRESH_TOKEN_REQUEST_FAILED = 'SEND_REFRESH_TOKEN_REQUEST_FAILED';
 export const SEND_REFRESH_TOKEN_REQUEST_SUCCESS = 'SEND_REFRESH_TOKEN_REQUEST_SUCCESS';
 export const REMOVE_REFRESH_TOKEN_DATA = 'REMOVE_REFRESH_TOKEN_DATA';
-/*export const SET_LOCATION = 'SET_LOCATION';
-export const ON_CLICK = 'ON_CLICK';
-export const REMOVE_ON_CLICK = 'REMOVE_ON_CLICK';
-export const REMOVE_LOCATIONS = 'REMOVE_LOCATIONS';*/
+export const REMOVE_ALL_AUTH_DATA = 'REMOVE_ALL_AUTH_DATA';
 
 export const GET_MY_DECKS = 'GET_MY_DECKS';
 export const GET_MY_DECKS_FAILED = 'GET_MY_DECKS_FAILED';
@@ -70,6 +65,7 @@ export const EDIT_DECK_SUCCESS = 'EDIT_DECK_SUCCESS';
 export const DELETE_DECK = 'DELETE_DECK';
 export const DELETE_DECK_FAILED = 'DELETE_DECK_FAILED';
 export const DELETE_DECK_SUCCESS = 'DELETE_DECK_SUCCESS';
+export const REMOVE_DECK_INFO = 'REMOVE_DECK_INFO';
 
 export const ADD_CARD = 'ADD_CARD';
 export const ADD_CARD_FAILED = 'ADD_CARD_FAILED';

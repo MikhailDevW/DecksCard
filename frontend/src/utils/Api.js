@@ -13,6 +13,16 @@ export class Api {
     }
   }
 
+    _handleResult1(res) {
+    if (res) {
+        console.log(res);
+        if (res.status === 200) {console.log('200!!!')}
+        return 200;
+    } else {
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
+  }
+
   signUp(data) {
     console.log(data);
     return fetch(`${bazeUrl}/v1/auth/signup/`, {
@@ -23,7 +33,7 @@ export class Api {
       },
       body: JSON.stringify(data)
       })
-    .then(this._handleResult)
+    .then(this._handleResult1)
   }
 
   signIn(data) {
@@ -162,7 +172,7 @@ export class Api {
   }
 
   getTodayCards(deckID) {
-    return fetch(`${this._bazeUrl}//v1/dashboard/${deckID}/cards/`, {
+    return fetch(`${this._bazeUrl}/v1/dashboard/${deckID}/cards/`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -173,7 +183,7 @@ export class Api {
 
   getDeckCards(deckID) {
     console.log(deckID);
-    return fetch(`${this._bazeUrl}//v1/dashboard/${deckID}/cards/all`, {
+    return fetch(`${this._bazeUrl}/v1/dashboard/${deckID}/cards/all`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

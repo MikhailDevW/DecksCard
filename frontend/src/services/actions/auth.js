@@ -24,7 +24,8 @@ import {
   SEND_REFRESH_TOKEN_REQUEST,
   SEND_REFRESH_TOKEN_REQUEST_FAILED, 
   SEND_REFRESH_TOKEN_REQUEST_SUCCESS,
-  REMOVE_REFRESH_TOKEN_DATA
+  REMOVE_REFRESH_TOKEN_DATA,
+  REMOVE_ALL_AUTH_DATA
 } from "../../utils/constants";
 
 export function login(data) {
@@ -57,6 +58,12 @@ export function removeLogin() {
   }
 }
 
+export function removeAllAuthData() {
+  return {
+    type: REMOVE_ALL_AUTH_DATA
+  }
+}
+
 export function register(data) {
   return function(dispatch) {
     dispatch({
@@ -64,6 +71,7 @@ export function register(data) {
     })
     api.signUp(data).then( res  => {
       if (res) {
+        console.log(res);
         dispatch({
           type: SEND_REGISTER_DATA_SUCCESS,
           sendRegister: res

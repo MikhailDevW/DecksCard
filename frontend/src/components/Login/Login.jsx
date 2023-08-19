@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { login, getUserData } from '../../services/actions/auth';
 import logo from '../../images/add.png';
+import plus from '../../images/Vector.png';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllDecks } from '../../services/actions/cards';
 
@@ -54,22 +55,20 @@ function Login (props) {
       localStorage.setItem('token', sendLogin.access);
       console.log(localStorage);
       dispatch(getAllDecks());
-      /*dispatch(getUserFlowers());
-      dispatch(getUserData());*/
  } }, [sendLogin]);
   
   return(
     <section className="login__background">
       <div className="login__container">
         <img
-          src={logo}
+          src={plus}
           alt="Логотип"
           className="register__logo"
         />
         <p className="login__title">
           Greetings!
         </p>
-        <form onSubmit={e => {handleLogin(e)}} className="login__form-container">
+        <form onSubmit={(e) => {handleLogin(e)}} className="login__form-container">
           <span className="login__text">
             E-mail
           </span>
@@ -138,11 +137,3 @@ function Login (props) {
 }
 
 export default Login;
-
-/*
-          {userErrorMessage !== '' && 
-            <p className="login__text-error">
-              {userErrorMessage}
-            </p>
-          }
-*/

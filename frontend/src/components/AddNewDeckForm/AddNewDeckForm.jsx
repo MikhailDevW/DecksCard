@@ -11,7 +11,7 @@ function AddNewDeckForm (props) {
   const [form, setValue] = useState({ title: '', description: '' });
   const titleInput = document.getElementById('titleAddFormInput');
   const descriptionInput = document.getElementById('descriptionAddFormInput');
-  const submitButton = document.getElementById('buttonSubmitAddForm');
+  const submitButton = document.getElementById('buttonSubmitAddNewDeckForm');
   const titleErrorSpan = document.getElementById('titleSpanAddForm');
   const descriptionErrorSpan = document.getElementById('descriptionSpanAddForm');
 
@@ -106,7 +106,7 @@ function AddNewDeckForm (props) {
         <button 
           type="submit" 
           className="addNewDeckForm__addButton addNewDeckForm__button-disabled" 
-          id='buttonSubmitAddForm'>
+          id='buttonSubmitAddNewDeckForm'>
           ADD
         </button>
       </form>

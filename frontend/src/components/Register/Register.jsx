@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../images/add.png';
 import './Register.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { register, getUserData } from '../../services/actions/auth';
+import { register, getUserData, removeRegister } from '../../services/actions/auth';
 
 function Register(props) {
 
@@ -43,10 +43,11 @@ function Register(props) {
     setUserErrorMessage('')
   }, [])*/
 
-  /*React.useEffect(() => {
-    if (sendRegister.username) {
-      navigate("/sign-in")};
-  }, [sendRegister]);*/
+  React.useEffect(() => {
+    if (sendRegister === 200) {
+      changeToLogin();
+    dispatch(removeRegister())};
+  }, [sendRegister]);
 
   function validate() {
     if(
@@ -148,11 +149,3 @@ function Register(props) {
 }
 
 export default Register;
-
-/*
-            {userErrorMessage !== '' && 
-              <p className="register__text-error">
-                {userErrorMessage}
-              </p>
-            }
-*/

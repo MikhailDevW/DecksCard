@@ -12,16 +12,21 @@ import AddNewDeckForm from '../../components/AddNewDeckForm/AddNewDeckForm.jsx';
 import AddNewWordForm from '../../components/AddNewWordForm/AddNewWordForm.jsx';
 import EditWordForm from '../../components/EditWordForm/EditWordForm.jsx';
 import RepeatingMode from '../../components/RepeatingMode/RepeatingMode.jsx';
+import { setCurrentDeck, setCurrentWord } from '../../services/actions/currentDeck.js';
+import { removeAllDecksData } from '../../services/actions/cards.js';
+import { removeAllAuthData } from '../../services/actions/auth.js';
 
 import Modal from "../../components/Modal/Modal";
 import './Main.css';
 
 function Main(props) {
   const {loggedIn, setLoggedIn, closeModal, addDeckModalIsOpen, setAddDeckModalIsOpen, editDeckModalIsOpen, setEditDeckModalIsOpen, addWordModalIsOpen, setAddWordModalIsOpen, editWordModalIsOpen, setEditWordModalIsOpen} = props;
+  const dispatch = useDispatch();
   //const dispatch = useDispatch();
   const [showLogin, setShowLogin] = React.useState(true);
   const { currentDeck } = useSelector(state => state.currentDeckReducer);
   const [repeatMode, setRepeatMode] = React.useState(false);
+  const { decks, deckCards } = useSelector(state => state.cardsReducer);
 
   function closeAddDeckModalIsOpen() {
     setAddDeckModalIsOpen(false)
@@ -29,6 +34,10 @@ function Main(props) {
 
   function closeEditDeckModal() {
     setEditDeckModalIsOpen(false)
+  }
+
+  function closeRepeatMode() {
+    setRepeatMode(false)
   }
 
   function closeAddWordModal() {
@@ -40,6 +49,8 @@ function Main(props) {
   }
 
   function handleLogout() {
+    dispatch(removeAllDecksData());
+    dispatch(removeAllAuthData());
     localStorage.clear();
     setLoggedIn(false);
   }
@@ -48,7 +59,9 @@ function Main(props) {
     <>
       <Header 
         loggedIn={loggedIn} 
-        handleLogout={handleLogout} />
+        handleLogout={handleLogout}
+        closeRepeatMode={closeRepeatMode}
+        repeatMode={repeatMode} />
       <div className="main__content">
         <main className="main">
           {!loggedIn && 
@@ -61,7 +74,7 @@ function Main(props) {
                 setShowLogin={setShowLogin} />}
             </>
           }
-          {loggedIn &&  !repeatMode &&
+          {loggedIn && !repeatMode &&
             <CardsHolder
               setAddDeckModalIsOpen={setAddDeckModalIsOpen}/>
           }
@@ -76,7 +89,7 @@ function Main(props) {
               editWordModalIsOpen={editWordModalIsOpen}
               setRepeatMode={setRepeatMode}/>
           }
-          {repeatMode && 
+          {loggedIn && repeatMode && 
             <RepeatingMode 
               addDeckModalIsOpen={addDeckModalIsOpen}
               setAddDeckModalIsOpen={setAddDeckModalIsOpen}
@@ -128,30 +141,3 @@ function Main(props) {
 }  
 
 export default Main;
-
-/*
-      <Modal
-        isOpen={editDeckModalIsOpen}
-        onClose={closeModal}
-        children={
-          <EditDeckForm 
-            handleEditDeckData={handleEditDeck} 
-            editDeckModalIsOpen={editDeckModalIsOpen} />}>
-      </Modal>
-      <Modal
-        isOpen={addWordModalIsOpen}
-        onClose={closeModal}
-        children={
-          <AddWordForm 
-            handleaddWord={handleAddWord}
-            addWordModalIsOpen={addWordModalIsOpen} />}>
-      </Modal>
-      <Modal
-        isOpen={editWordModalIsOpen}
-        onClose={closeModal}
-        children={
-          <EditWordForm 
-            handleEditWord={handleEditWord}
-            editWordModalIsOpen={editWordModalIsOpen} />}>
-      </Modal>
-      */

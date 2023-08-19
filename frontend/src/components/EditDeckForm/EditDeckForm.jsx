@@ -43,12 +43,7 @@ function EditDeckForm ({editDeckModalIsOpen, closeEditDeckModal}) {
     }
   }, [editDeckModalIsOpen])
 
-  useEffect(()=> {
-    console.log(form);
-  }, [form])
-
   function handleSubmit(e) {
-    console.log(form);
     e.preventDefault();
     dispatch(editDeck(currentDeck.slug, form));
     closeEditDeckModal()

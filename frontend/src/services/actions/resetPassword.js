@@ -69,4 +69,4 @@ export function removePassword() {
   return {
     type: REMOVE_PASSWORD
   }
-} 
+}
