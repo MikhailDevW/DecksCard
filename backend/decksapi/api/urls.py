@@ -7,7 +7,6 @@ from .views import (
 )
 from .serializers import MyTokenObtainPairSerializer
 
-
 router = SimpleRouter()
 router.register('auth/signup', UserSignUp)
 router.register('dashboard', DashboardViewSet)
