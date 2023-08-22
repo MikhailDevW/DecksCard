@@ -1,4 +1,4 @@
-export const bazeUrl = "https://decks.mikhailwdev.ru/api";
+export const bazeUrl = "api";
 
 export const ERROR_MESSAGE = {
   DATA_RECEIVE_ERROR: 'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.',
