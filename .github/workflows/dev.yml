@@ -36,6 +36,9 @@ jobs:
           # Поэтому подключаемся к 127.0.0.1:5432
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
+          SECRET_KEY: 'django-insecure-unm(i#@k_slvz1ri_b2f@sl(8!4ho_h5q%a9rf!l*jpb(qar*)'
+          DEBUG: True
+          ALLOWED_HOSTS: localhost,127.0.0.1
       run: |
         cd backend/decksapi/
         python manage.py test
