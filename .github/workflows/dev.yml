@@ -37,5 +37,5 @@ jobs:
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
       run: |
-        cd backend/
+        cd backend/decksapi/
         python manage.py test
