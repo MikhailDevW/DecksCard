@@ -39,6 +39,17 @@ jobs:
           SECRET_KEY: 'django-insecure-unm(i#@k_slvz1ri_b2f@sl(8!4ho_h5q%a9rf!l*jpb(qar*)'
           DEBUG: True
           ALLOWED_HOSTS: localhost,127.0.0.1
+          LANGUAGE_CODE: 'en'
+          TIME_ZONE: 'UTC'
+          USE_I18N: True
+          USE_L10N: True
+          USE_TZ: True
+          EMAIL_HOST: 'smtp.gmail.com'
+          EMAIL_USE_TLS: False
+          EMAIL_PORT: 465
+          EMAIL_USE_SSL: True
+          EMAIL_HOST_USER: 'wildmv@gmail.com'
+          EMAIL_HOST_PASSWORD: '7axn8MLMtg'
       run: |
         cd backend/decksapi/
         python manage.py test
