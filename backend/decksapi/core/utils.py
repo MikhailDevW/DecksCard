@@ -12,6 +12,10 @@ def decode_uid(pk):
 
 
 class Mail:
+    CONFIRM_URL = (
+        'https://decks.mikhailwdev.ru/api/v1/auth/confirm/'
+    )
+
     def __init__(self, to, uid, code) -> None:
         self.subject = 'Welcome message.'
         self.from_email = 'wildmv@gmail.com'
@@ -22,7 +26,7 @@ class Mail:
     def send_message(self):
         send_mail(
             self.subject,
-            f'https://decks.mikhailwdev.ru/api/v1/auth/confirm/{self.uid}/{self.code}/',
+            self.CONFIRM_URL + f'{self.uid}/{self.code}/',
             self.from_email,
             [self.to],
             fail_silently=False,

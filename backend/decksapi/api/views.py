@@ -11,7 +11,6 @@ from rest_framework import (
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-
 from core.example_deck import example_deck
 from core.models import Card, CustomUser, Deck
 from core.utils import Mail
@@ -59,7 +58,9 @@ class UserSignUp(CreateViewSet):
                 )
                 mail.send_message()
         except smtplib.SMTPAuthenticationError as auth_error:
-            signup_status['mail_sent'] = f'Message not sent. Error: {auth_error}'
+            signup_status['mail_sent'] = (
+                f'Message not sent. Error: {auth_error}'
+            )
             # user.delete()
         except AssertionError as error:
             signup_status['mail_sent'] = f'Some sending error occured! {error}'
