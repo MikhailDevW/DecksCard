@@ -65,11 +65,16 @@ class CardSerializer(serializers.ModelSerializer):
 class SignUpSerializer(serializers.ModelSerializer):
     password = serializers.RegexField(
         regex=settings.USER_PASSWORD_PATTERN,
-        min_length=settings.USER_PASSWORD_MIN_LENGTH
+        min_length=settings.USER_PASSWORD_MIN_LENGTH,
     )
 
     class Meta:
-        fields = ('email', 'password', 'first_name', 'last_name')
+        fields = (
+            'email',
+            'password',
+            'first_name',
+            'last_name',
+        )
         model = CustomUser
 
 

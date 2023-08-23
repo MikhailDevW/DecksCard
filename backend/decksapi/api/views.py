@@ -38,6 +38,7 @@ class UserSignUp(CreateViewSet):
 
     def create(self, request, *args, **kwargs):
         signup_status = {}
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save(
@@ -45,6 +46,7 @@ class UserSignUp(CreateViewSet):
             is_active=True,  # данную возможность отсавляем
             # пока не работает подтверждение по почте
         )
+
         user_uid = encode_uid(user.id)
         user_code = default_token_generator.make_token(user)
         signup_status['example_deck'] = example_deck(user)
