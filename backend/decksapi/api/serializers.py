@@ -1,3 +1,4 @@
+import re
 from PIL import Image
 
 from django.conf import settings
@@ -8,6 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.validators import UniqueValidator
 
 from core.models import Card, CustomUser, Deck
+from django.contrib.auth.hashers import make_password
 
 
 class DeckSerializer(serializers.ModelSerializer):
@@ -114,13 +116,48 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = '__all__'
-        exclude = (
-            'id',
-            'password',
-            'is_superuser',
-            'role',
-            'groups',
-            'user_permissions',
+        fields = (
+            'username',
+            'first_name',
+            'last_login',
+            'email',
         )
-        read_only_fields = ('email', 'last_login',)
+        read_only_fields = (
+            'email',
+            'last_login',
+        )
+
+
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    """
+    !!!
+    Данный сериализатор не реализован.
+    Требуется доработка в части сравнения пароля.
+    !!!
+    """
+    # password = serializers.RegexField(
+    #     regex=settings.USER_PASSWORD_PATTERN,
+    #     min_length=settings.USER_PASSWORD_MIN_LENGTH,
+    # )
+
+    class Meta:
+        fields = (
+            'password',
+        )
+        model = CustomUser
+
+    def validate_password(self, value):
+        old_password = self.context.get('request').user.password
+        confirm_password = make_password(value)
+        if old_password != confirm_password:
+            raise serializers.ValidationError(
+                'Nicht!!!'
+            )
+        # if (
+        #     re.match(settings.USER_PASSWORD_PATTERN, value) is None
+        # ):
+        #     raise serializers.ValidationError(
+        #         'Enter a valid password.'
+        #         'It should contains at least one letter in uppercase!'
+        #     )
+        return value

@@ -18,7 +18,7 @@ from .mixins import CreateViewSet
 from .permissions import OwnerOnly
 from .serializers import (
     CardSerializer, ConfirmCodeSerializer, DeckSerializer, ProfileSerializer,
-    SignUpSerializer
+    SignUpSerializer, ChangePasswordSerializer,
 )
 from core.utils import decode_uid, encode_uid
 
@@ -42,7 +42,9 @@ class UserSignUp(CreateViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save(
-            password=make_password(serializer.validated_data['password'],),
+            password=make_password(
+                serializer.validated_data['password'],
+            ),
             is_active=True,  # данную возможность отсавляем
             # пока не работает подтверждение по почте
         )
@@ -166,10 +168,13 @@ class ProfileViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = (permissions.IsAdminUser,)
-    # lookup_field = 'username'
-    # pagination_class = PageNumberPagination
     # filter_backends = (filters.SearchFilter,)
     # search_fields = ('username',)
+
+    def get_serializer_class(self):
+        if self.action == 'me' and self.request.method == 'PATCH':
+            return ChangePasswordSerializer
+        return self.serializer_class
 
     @action(
         methods=['patch', 'get'],
@@ -189,9 +194,17 @@ class ProfileViewSet(viewsets.ModelViewSet):
             )
             if not serializer.is_valid():
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-            serializer.save(role=instance.role)
+            serializer.save(
+                role=instance.role,
+            )
             return Response(serializer.data)
         return Response(
             serializer.data,
             status=status.HTTP_200_OK
         )
+
+
+class ChangePasswordView(generics.UpdateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = ChangePasswordSerializer
+    permission_classes = [permissions.IsAuthenticated]
