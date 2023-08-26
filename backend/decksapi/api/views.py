@@ -1,4 +1,5 @@
 from datetime import date
+import smtplib
 
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
@@ -10,14 +11,14 @@ from rest_framework import (
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-
+from core.example_deck import example_deck
 from core.models import Card, CustomUser, Deck
 from core.utils import Mail
 from .mixins import CreateViewSet
 from .permissions import OwnerOnly
 from .serializers import (
     CardSerializer, ConfirmCodeSerializer, DeckSerializer, ProfileSerializer,
-    SignUpSerializer
+    SignUpSerializer, ChangePasswordSerializer,
 )
 from core.utils import decode_uid, encode_uid
 
@@ -31,40 +32,49 @@ class UserSignUp(CreateViewSet):
     Поля email и должны быть уникальными.
     Методы: только POST
     """
-    queryset = CustomUser.objects.all()
+    queryset = CustomUser.objects.select_related().all()
     serializer_class = SignUpSerializer
     permission_classes = (permissions.AllowAny,)
 
     def create(self, request, *args, **kwargs):
+        signup_status = {}
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save(
-            password=make_password(serializer.validated_data['password'])
+            password=make_password(
+                serializer.validated_data['password'],
+            ),
+            is_active=True,  # данную возможность отсавляем
+            # пока не работает подтверждение по почте
         )
+
         user_uid = encode_uid(user.id)
         user_code = default_token_generator.make_token(user)
+        signup_status['example_deck'] = example_deck(user)
 
-        # создание колоды как примера работы сервиса
-        example_deck = Deck.objects.create(
-            title='Example (RU_EN)',
-            author=user,
-        )
-        # objs = example_deck.objects.bulk_create(
-        #     [
-        #         Card(front_side='кошка', back_side='cat'),
-        #         Card(front_side='собака', back_side='dog'),
-        #     ]
-        # )
-
-        if settings.SEND_CONFIRM_EMAIL:
-            mail = Mail(
-                serializer.validated_data['email'],
-                user_uid,
-                user_code,
+        try:
+            if settings.SEND_CONFIRM_EMAIL:
+                mail = Mail(
+                    serializer.validated_data['email'],
+                    user_uid,
+                    user_code,
+                )
+                mail.send_message()
+        except smtplib.SMTPAuthenticationError as auth_error:
+            signup_status['mail_sent'] = (
+                f'Message not sent. Error: {auth_error}'
             )
-            mail.send_message()
+            # user.delete()
+        except AssertionError as error:
+            signup_status['mail_sent'] = f'Some sending error occured! {error}'
+            # user.delete()
+
         return Response(
             status=status.HTTP_200_OK,
+            data={
+                'signup_status': signup_status
+            }
         )
 
 
@@ -103,15 +113,19 @@ class DashboardViewSet(viewsets.ModelViewSet):
     Methods: GET, POST, PUT, PATCH, DELETE.
     Only owner can edit the Deck.
     """
-    queryset = Deck.objects.all()
+    queryset = Deck.objects.select_related('ghjg').all()
     serializer_class = DeckSerializer
     lookup_field = 'slug'
 
     def get_queryset(self):
-        return self.request.user.decks.all()
+        return (
+            self.request.user.decks.select_related('author').all()
+        )
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer.save(
+            author=self.request.user
+        )
 
 
 class CardsViewSet(viewsets.ModelViewSet):
@@ -154,10 +168,13 @@ class ProfileViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = (permissions.IsAdminUser,)
-    # lookup_field = 'username'
-    # pagination_class = PageNumberPagination
     # filter_backends = (filters.SearchFilter,)
     # search_fields = ('username',)
+
+    def get_serializer_class(self):
+        if self.action == 'me' and self.request.method == 'PATCH':
+            return ChangePasswordSerializer
+        return self.serializer_class
 
     @action(
         methods=['patch', 'get'],
@@ -177,9 +194,17 @@ class ProfileViewSet(viewsets.ModelViewSet):
             )
             if not serializer.is_valid():
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-            serializer.save(role=instance.role)
+            serializer.save(
+                role=instance.role,
+            )
             return Response(serializer.data)
         return Response(
             serializer.data,
             status=status.HTTP_200_OK
         )
+
+
+class ChangePasswordView(generics.UpdateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = ChangePasswordSerializer
+    permission_classes = [permissions.IsAuthenticated]

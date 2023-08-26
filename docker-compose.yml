@@ -1,0 +1,43 @@
+version: '3'
+
+volumes:
+  mysql_test:
+  static:
+  media:
+
+# Перечень контейнеров
+services:
+  # Имя и описание первого контейнера; имя выбирает разработчик. 
+  db:
+    # Из какого образа запустить контейнер:
+    image: mysql:8
+    # Файл (или список файлов) с переменными окружения
+    env_file: .env
+    # Какой volume подключить для этого контейнера
+    volumes:
+      - mysql_test:/var/lib/mysql
+      - media:/app/media
+  backend:
+    build: ./backend/
+    env_file: .env
+    depends_on:
+      - db
+    volumes:
+      - static:/backend_static
+  frontend:
+    env_file: .env
+    build: ./frontend/
+    depends_on:
+      - db
+    command: cp -r /app/build/. /frontend_static/
+    volumes:
+      - static:/frontend_static
+  gateway:
+    build: ./nginx/
+    ports:
+      - 80:80
+    depends_on:
+      - db
+    volumes:
+      - static:/staticfiles/
+      - media:/app/media

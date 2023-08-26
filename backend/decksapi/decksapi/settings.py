@@ -5,14 +5,13 @@ from datetime import timedelta
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(
-    dotenv_path=os.path.join(
-        BASE_DIR, 'decksapi', '.env'
-    )
-)
+load_dotenv()
 
 SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.getenv('DEBUG') == 'True'
+DEBUG = os.getenv(
+    'DEBUG',
+    default='False'
+) == 'True'
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(',')
 
 DJANGO_APPS = [
@@ -69,12 +68,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'decksapi.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': os.getenv('DB_ENGINE'),
-        'NAME': BASE_DIR / os.getenv('DB_NAME'),
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': 'localhost',
+            'PORT': int(os.getenv('DB_PORT')),
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -98,7 +109,8 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-STATIC_URL = '/static_backend/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 
 if DEBUG:
     MEDIA_URL = '/media/'
@@ -139,10 +151,10 @@ SIMPLE_JWT = {
     "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
 }
 
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'mail')
+# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+# EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'mail')
 
-SEND_CONFIRM_EMAIL = True
+SEND_CONFIRM_EMAIL = False
 EMAIL_LENGTH = 100
 NAME_LENGTH = 150
 
@@ -156,3 +168,11 @@ DECK_SLUG_LENGTH = 50
 CARDS_PER_DAY_DEFAULT = 10
 
 CARD_MAX_LENGTH = 200
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') == 'True'
+EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL') == 'True'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')

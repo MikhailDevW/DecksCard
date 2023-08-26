@@ -171,8 +171,8 @@ class Card(models.Model):
             with Image.open(value, formats=('PNG', 'JPEG')) as image:
                 if image.size > MAX_PIC_DIMENSION:
                     raise ValidationError(
-                            'Incorrect image size.'
-                        )
+                        'Incorrect image size.'
+                    )
         except TypeError:
             raise ValidationError(
                 'Incorrect image format.'
