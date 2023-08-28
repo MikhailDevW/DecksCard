@@ -154,7 +154,7 @@ SIMPLE_JWT = {
 # EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 # EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'mail')
 
-SEND_CONFIRM_EMAIL = False
+SEND_CONFIRM_EMAIL = True
 EMAIL_LENGTH = 100
 NAME_LENGTH = 150
 

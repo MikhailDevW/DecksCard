@@ -18,7 +18,7 @@ class Mail:
 
     def __init__(self, to, uid, code) -> None:
         self.subject = 'Welcome message.'
-        self.from_email = 'wildmv@gmail.com'
+        self.from_email = 'braindeckssite@gmail.com'
         self.to = to
         self.uid = uid
         self.code = code
