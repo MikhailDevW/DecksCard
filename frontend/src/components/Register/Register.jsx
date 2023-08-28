@@ -54,11 +54,13 @@ function Register(props) {
                                                 required: true,
                                                 minLength: 8,
                                                 maxLength: 50,
+                                                pattern: /^(?=.*[A-Z])[a-zA-Z0-9]*$/,
                                           })}
                                     />
                                     {errors.password && (
                                           <span className={styles.error}>
-                                                Пароль должен быть более 8 и не более 50 символов
+                                                Пароль должен быть более 8 и не более 50 символов, и
+                                                содержать хотя бы одну большую букву
                                           </span>
                                     )}
 
