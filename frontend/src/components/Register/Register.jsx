@@ -16,7 +16,7 @@ function Register(props) {
 
       const onSubmit = (data) => {
             console.log(data);
-            dispatch(register(data));
+            // dispatch(register(data));
       };
 
       console.log(errors);
