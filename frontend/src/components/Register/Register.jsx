@@ -1,151 +1,94 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom';
-import logo from '../../images/add.png';
-import './Register.css';
-import { useSelector, useDispatch } from 'react-redux';
-import { register, getUserData, removeRegister } from '../../services/actions/auth';
+import { useForm } from "react-hook-form";
+import logo from "../../images/add.png";
+
+import { useDispatch } from "react-redux";
+import clsx from "clsx";
+import styles from "./Register.module.scss";
 
 function Register(props) {
+      const {
+            handleSubmit,
+            register,
+            formState: { errors },
+      } = useForm({ mode: "onChange" });
 
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [userName, setUserName] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const {/*registerUser, userErrorMessage, setUserErrorMessage*/setShowLogin} = props;
-  const emailInput = document.getElementById('emailRegister');
-  const passwordInput = document.getElementById('passwordRegister');
-  const submitButton = document.getElementById('buttonRegister');
-  const nameErrorSpan = document.getElementById('usernameSpanRegister');
-  const emailErrorSpan = document.getElementById('emailSpanRegister');
-  const passwordErrorSpan = document.getElementById('passwordSpanRegister');
-  const firstNameErrorSpan = document.getElementById('firstNameSpanRegister');
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { user, sendRegister, sendRegisterRequest, sendRegisterFailed } = useSelector(state => state.authReducer);
+      const dispatch = useDispatch();
 
-  function handleSubmit(evt) {
-    evt.preventDefault();
-    const data = { 
-      'email': email, 
-      'password': password,
-      'first_name': '',
-      'last_name': ''
-    };
-    console.log(data);
-    dispatch(register(data));
-  }
+      const onSubmit = (data) => {
+            console.log(data);
+            // dispatch(register(data));
+      };
 
-  function changeToLogin() {
-    setShowLogin(true)
-  }
+      console.log(errors);
 
-  /*useEffect(() => {
-    setUserErrorMessage('')
-  }, [])*/
-
-  React.useEffect(() => {
-    if (sendRegister === 200) {
-      changeToLogin();
-    dispatch(removeRegister())};
-  }, [sendRegister]);
-
-  function validate() {
-    if(
-      emailInput 
-      && passwordInput 
-      && !(emailInput.validationMessage || passwordInput.validationMessage)) 
       return (
-        submitButton.classList.remove('register__button-disabled'), 
-        submitButton.classList.add('register__button-active'), 
-        submitButton.disabled = false); 
-    else if (
-      emailInput
-      && passwordInput) 
-      return (
-        submitButton.classList.remove('register__button-active'), 
-        submitButton.classList.add('register__button-disabled'), 
-        submitButton.disabled = true)
-  }
-  
-  return (
-    <>
-      <section className='register__background'>
-        <div className="register__container">
-          <img
-              src={logo}
-              alt="Логотип"
-              className="register__logo"
-            />
-          <p className="register__title">
-            Greetings!!
-          </p>
-          <form 
-            onSubmit={handleSubmit} 
-            className="register__form-container">
-            <span className="register__text">
-              E-mail
-            </span>
-            <input 
-              required
-              className="register__input" 
-              id="emailRegister" 
-              name="email" 
-              type="email" 
-              placeholder="E-mail" 
-              value={email} 
-              onChange={e => {
-                setEmail(e.target.value);
-                validate();
-                if (emailInput) 
-                  return (emailErrorSpan.textContent = emailInput.validationMessage);
-              }} />
-            <span 
-              className="register__text input-emailRegister-error register__input-error" 
-              id='emailSpanRegister'> </span>
-            <span className="register__text">
-              Password
-            </span>
-            <input 
-              required
-              className="register__input" 
-              id="passwordRegister" 
-              name="password" 
-              type="password"
-              placeholder="Password" 
-              value={password} 
-              onChange={e => {
-                setPassword(e.target.value); 
-                validate();
-                if(passwordInput) 
-                  return (passwordErrorSpan.textContent = passwordInput.validationMessage);
-              }} />
-            <span 
-              className="register__text input-emailLRegister-error register__input-error" 
-              id='passwordSpanRegister'> </span>
+            <>
+                  <section className={styles.container}>
+                        <div className={styles.wrapper}>
+                              <img src={logo} alt="Логотип" className={styles.logo} />
+                              <h1 className={styles.title}>Greetings!!</h1>
+                              <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+                                    <span className={styles.form__title}>E-mail</span>
+                                    <input
+                                          className={styles.input}
+                                          placeholder="E-mail"
+                                          autoComplete="off"
+                                          {...register("email", {
+                                                required: true,
+                                                pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                          })}
+                                    />
+                                    {errors.email && (
+                                          <span className={styles.error}>
+                                                Email должен соответствовать паттерну
+                                                example@example.com
+                                          </span>
+                                    )}
+                                    <span className={styles.form__title}>Password</span>
+                                    <input
+                                          className={styles.input}
+                                          name="password"
+                                          type="password"
+                                          placeholder="Password"
+                                          {...register("password", {
+                                                required: true,
+                                                minLength: 8,
+                                                maxLength: 50,
+                                                pattern: /^(?=.*[A-Z])[a-zA-Z0-9]*$/,
+                                          })}
+                                    />
+                                    {errors.password && (
+                                          <span className={styles.error}>
+                                                Пароль должен быть более 8 и не более 50 символов, и
+                                                содержать хотя бы одну большую букву
+                                          </span>
+                                    )}
 
-            <button 
-              type="submit" 
-              onSubmit={handleSubmit} 
-              className="register__button register__button-active button_type_primary"
-              disabled
-              id="buttonRegister">
-                Register
-            </button>
-          </form>
-          <div className="register__link-container">
-            <p className="register__underbottom-text">
-              Already registered?
-            </p>
-            <p 
-              onClick={changeToLogin}
-              className="register__underbottom-text register__link">
-                Login
-            </p>
-          </div>
-        </div>  
-      </section>
-    </>
-  );
+                                    <button
+                                          type="submit"
+                                          className={clsx(
+                                                styles.button,
+                                                styles.active,
+                                                styles.primary
+                                          )}
+                                          disabled={
+                                                (errors.email && true) || (errors.password && true)
+                                          }>
+                                          Register
+                                    </button>
+                              </form>
+                              <div className={styles.link}>
+                                    <p className={styles.text}>Already registered?</p>
+                                    <p
+                                          // onClick={changeToLogin}
+                                          className={clsx(styles.text, styles.text__underbottom)}>
+                                          Login
+                                    </p>
+                              </div>
+                        </div>
+                  </section>
+            </>
+      );
 }
 
 export default Register;

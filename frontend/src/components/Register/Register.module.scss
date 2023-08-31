@@ -1,0 +1,173 @@
+.container {
+    display: flex;
+    width: 500px;
+    justify-content: center;
+    align-items: flex-start;
+    height: calc(100% + 270px);
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+
+        .logo {
+            width: 105px;
+            height: 90px;
+
+            &:hover {
+                opacity: 0.6;
+                cursor: pointer;
+                transform: rotate(360deg);
+                transition: 1s;
+            }
+        }
+
+        .title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 29px;
+            margin: 0;
+            color: rgb(0, 0, 0);
+            margin: 0;
+            padding: 40px 0;
+            text-align: center;
+
+            @media screen and (max-width: 500px) {
+                .register__title {
+                    padding: 50px 0 80px 0;
+                    align-self: center;
+                }
+            }
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-family: inherit;
+            width: 100%;
+
+            &__title {
+                font-family: 'Inter', sans-serif;
+                font-weight: 400;
+                font-size: 10px;
+                line-height: 12px;
+                color: #A0A0A0;
+                margin: 0;
+                padding-bottom: 10px;
+            }
+
+            .input {
+                &:focus {
+                    outline: none;
+                }
+
+                background: white;
+                border: none;
+                border-bottom: 1px solid #E8E8E8;
+                color: #000000;
+                font-family: 'Inter',
+                sans-serif;
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 17px;
+                width: 100%;
+                height: 27px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+            .button {
+                width: 396px;
+                height: 45px;
+                color: rgb(255, 255, 255);
+                background: #325c27;
+                border-radius: 3px;
+                font-family: 'Inter', sans-serif;
+                font-weight: 500;
+                font-size: 14px;
+                line-height: 17px;
+                text-align: center;
+                flex-shrink: 0;
+                margin-top: 100px;
+                border: none;
+                box-sizing: border-box;
+                cursor: pointer;
+                transition: 0.3s ease-in-out;
+                align-self: center;
+            }
+
+            .disabled {
+                background: #cbeeae;
+            }
+
+            .active {
+                &:hover {
+                    opacity: 0.5;
+                    cursor: pointer;
+                    transition: 0.5s;
+                }
+            }
+
+            .primary {
+                color: #ffffff;
+                background: linear-gradient(63.18deg, #81c75b 0%, #d3f35c 100%);
+
+                &:hover {
+                    box-shadow: 0px 0px 16px 8px rgba(142, 249, 158, 0.25), 0px 0px 8px 8px rgba(213, 249, 172, 0.25);
+                    filter: drop-shadow(0px 4px 32px rgba(217, 231, 128, 0.5));
+                }
+
+                &:active {
+                    opacity: 0.9;
+                    background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), linear-gradient(63.18deg, #71da59 0%, #acdc4c 100%);
+                }
+
+                &[disabled] {
+                    pointer-events: none;
+                    background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), linear-gradient(63.18deg, #71da59 0%, #acdc4c 100%);
+                    opacity: 0.2;
+                }
+            }
+        }
+
+        .link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 16px;
+            gap: 6px;
+
+            .text {
+                color: #3456F3;
+                text-decoration: none;
+
+                &:hover {
+                    opacity: 0.5;
+                    cursor: pointer;
+                    transition: 1s;
+
+                }
+            }
+
+            .text__underbottom {
+                font-family: 'Inter', sans-serif;
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 17px;
+                color: #A0A0A0;
+                margin: 0;
+            }
+        }
+
+
+        .error {
+            color: red;
+            font-size: 12px;
+        }
+    }
+}
