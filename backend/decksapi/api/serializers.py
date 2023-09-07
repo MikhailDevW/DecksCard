@@ -2,9 +2,13 @@ import re
 from PIL import Image
 
 from django.conf import settings
+from django.contrib.auth.models import update_last_login
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
-from rest_framework_simplejwt.serializers import TokenObtainSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+# from rest_framework_simplejwt.serializers import TokenObtainSerializer
+from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.validators import UniqueValidator
 
@@ -69,6 +73,7 @@ class SignUpSerializer(serializers.ModelSerializer):
         regex=settings.USER_PASSWORD_PATTERN,
         min_length=settings.USER_PASSWORD_MIN_LENGTH,
     )
+    email = serializers.EmailField(required=True, write_only=True, max_length=128)
 
     class Meta:
         fields = (
@@ -79,19 +84,30 @@ class SignUpSerializer(serializers.ModelSerializer):
         )
         model = CustomUser
 
+    def create(self, validated_data):
+        try:
+            user = CustomUser.objects.get(email=validated_data['email'])
+        except ObjectDoesNotExist:
+            user = CustomUser.objects.create_user(**validated_data)
+        return user
 
-class MyTokenObtainPairSerializer(TokenObtainSerializer):
+
+class EmailTokenObtainSerializer(TokenObtainPairSerializer):
+    username_field = CustomUser.EMAIL_FIELD
+
+
+class MyTokenObtainPairSerializer(EmailTokenObtainSerializer):
     @classmethod
     def get_token(cls, user):
         return RefreshToken.for_user(user)
 
     def validate(self, attrs):
         data = super().validate(attrs)
-        access = self.get_token(self.user)
-        data['access'] = str(access.access_token)
-        # будет допиливаться...теперь вопрос что
-        # if api_settings.UPDATE_LAST_LOGIN:
-        #     update_last_login(None, self.user)
+        refresh = self.get_token(self.user)
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token)
+        if api_settings.UPDATE_LAST_LOGIN:
+            update_last_login(None, self.user)
         return data
 
 

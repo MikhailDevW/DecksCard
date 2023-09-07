@@ -10,6 +10,10 @@ from rest_framework import (
 )
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.viewsets import ModelViewSet
 
 from core.example_deck import example_deck
 from core.models import Card, CustomUser, Deck
@@ -17,9 +21,9 @@ from core.utils import Mail
 from .mixins import CreateViewSet
 from .permissions import OwnerOnly
 from .serializers import (
-    CardSerializer, ConfirmCodeSerializer, DeckSerializer, ProfileSerializer,
-    SignUpSerializer, ChangePasswordSerializer,
-)
+    CardSerializer, ChangePasswordSerializer, ConfirmCodeSerializer,
+    DeckSerializer, MyTokenObtainPairSerializer, ProfileSerializer,
+    SignUpSerializer)
 from core.utils import decode_uid, encode_uid
 
 
@@ -29,12 +33,13 @@ class UserSignUp(CreateViewSet):
     Пользователь отправляет email и password.
     На почту пользователю приходит сообщение с ссылкой актвиации
     Права доступа: Доступно без токена.
-    Поля email и должны быть уникальными.
+    Поля email и пароль должны быть уникальными.
     Методы: только POST
     """
     queryset = CustomUser.objects.select_related().all()
     serializer_class = SignUpSerializer
     permission_classes = (permissions.AllowAny,)
+    http_method_names = ['post']
 
     def create(self, request, *args, **kwargs):
         signup_status = {}
@@ -52,6 +57,11 @@ class UserSignUp(CreateViewSet):
         user_uid = encode_uid(user.id)
         user_code = default_token_generator.make_token(user)
         signup_status['example_deck'] = example_deck(user)
+        refresh = RefreshToken.for_user(user)
+        res = {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
 
         try:
             if settings.SEND_CONFIRM_EMAIL:
@@ -71,11 +81,45 @@ class UserSignUp(CreateViewSet):
             # user.delete()
 
         return Response(
-            status=status.HTTP_200_OK,
+            status=status.HTTP_200_OK, # почему не статус 201?
             data={
+                'user': serializer.data,
+                'refresh': res['refresh'],
+                'token': res['access'],
                 'signup_status': signup_status
             }
         )
+
+
+class LoginViewSet(ModelViewSet, TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+    permission_classes = (permissions.AllowAny,)
+    http_method_names = ['post']
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
+
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
+    
+
+class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
+    permission_classes = (permissions.AllowAny,)
+    http_method_names = ['post']
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
+
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
 class ConfirmCodeView(generics.ListCreateAPIView):
@@ -105,6 +149,10 @@ class ConfirmCodeView(generics.ListCreateAPIView):
         user.is_active = True
         user.save()
         return Response(status=status.HTTP_200_OK,)
+
+
+class TokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
 
 
 class DashboardViewSet(viewsets.ModelViewSet):
