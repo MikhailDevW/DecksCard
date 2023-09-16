@@ -1,0 +1,138 @@
+1. Введение. (Что такое М2М связь и где использовали).
+
+==============================================================================
+2. Создание модели М2М
+Создадим модели для описания новости и тега:
+Далее заполним нашу БД тестовыми данными для дальнейшего использования.
+
+from core.models import News, Tag
+tag1 = Tag(name='new tag')
+tag1.save()
+
+А что если не схранить?
+Пробуем! Теперь создадим новость.
+
+news1 = News(title='WSL is scum', text='Certainly yes, the scum')
+news1.save()
+news1.tags.add(tag1)
+
+==============================================================================
+3. Операции с моделями М2М без промеуточной модели
+А теперь посмотрим, что прямые запросы у нас работают отлично,
+попробуем сделать обратный запрос...но увы, не получилось.
+Все из-за того, что мы не указали релейтед нейм.
+В таком случае во второй таблице появляется поле *_сет (исчезает при задании релейтед)
+В джанговской модели оно появляется, но в базе нету.
+С помощью данного поля мы можем сделать обратный запрос без назначения поля релейтед.
+
+Рассмотрим методы для М2М.
+Это add(), remove(), set(), clear()
+И поиграемся с этими методами.
+Если мы не используем промежуточную модель то юник констреинт создается автоматом
+
+Теперь попробуем обратиться к промежуточной модели. Как ее выдернуть?
+news_tag = news1.tags.through
+news_tag._meta.fields
+news1.tags.through.objects.all() - смотрим все связки
+
+==============================================================================
+4. Операции с моделями М2М c промеуточной модели
+При создании промежуточной таблицы у нас должно быть два внешних ключа.
+Один куказывает на целевую таблицу, другой указывает на исходную таблицу.
+Юник констреин уже не создается автоматчиески!
+
+Пробуем воспользоваться методом .add()
+from news.models import News, Tag
+news1 = News.objects.get(id=3)
+tag1 = Tag.objects.get(id=5)
+tag2 = Tag.objects.get(id=13)
+news1.tags.add(tag1)
+news1.tags.add(tag1, through_defaults={'star':5})
+
+news1.tags.through.objects.filter(news=news1)
+
+Метод set так работать не будет(для доп полей)...
+
+Рассмотреть если внешних ключей больше чем два.!!!
+
+==============================================================================
+5. Немнго рекурсии
+from news.models import Editor
+e1 = Editor.objects.get(id=1)
+e3 = Editor.objects.get(id=3)
+e3.name
+
+e1.subscribed_to
+e1.subscribed_to.add(e1)
+e1.subscribed_to.add(e3)
+e1.subscribed_to.all()
+>>> e3.editor_set
+>>> e3.editor_set.all()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Ingridient(models.Model):
+    '''
+    Таблица с ингридиентами для рецептов.
+    '''
+    name = models.CharField(
+        max_length=128,
+        verbose_name='название',
+    )
+    unit = models.CharField(
+        max_length=128,
+        verbose_name='ед. измерения',
+    )
+
+    def __str__(self) -> str:
+        return f'{self.name} {self.unit}'
+
+
+        class Recipe(models.Model):
+    '''
+    Таблица с рецептами.
+    '''
+    title = models.CharField(
+        max_length=128,
+        verbose_name='название',
+    )
+    description = models.TextField()
+    ingridients = models.ManyToManyField(
+        Ingridient,
+        through='IngridientInRecipe',
+    )
+
+    def __str__(self) -> str:
+        return self.title
+
+
+        class IngridientInRecipe(models.Model):
+    ingridient = models.ForeignKey(
+        Ingridient,
+        on_delete=models.CASCADE
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE
+    )
+    amount = models.IntegerField()
