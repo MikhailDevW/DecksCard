@@ -28,6 +28,7 @@ DJANGO_APPS = [
 PROJECT_APPS = [
     'api',
     'core',
+    'news',
 ]
 
 THIRD_PARTY_APPS = [
