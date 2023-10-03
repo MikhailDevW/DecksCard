@@ -8,27 +8,19 @@ volumes:
 # Перечень контейнеров
 services:
   # Имя и описание первого контейнера; имя выбирает разработчик. 
-  db:
-    # Из какого образа запустить контейнер:
-    image: mysql:8
-    # Файл (или список файлов) с переменными окружения
-    env_file: .env
-    # Какой volume подключить для этого контейнера
-    volumes:
-      - mysql_test:/var/lib/mysql
-      - media:/app/media
+  # db:
+
   backend:
     build: ./backend/
-    env_file: .env
-    depends_on:
-      - db
+    env_file: ./backend/decksapi/.env
+    # depends_on:
+      # - db
     volumes:
       - static:/backend_static
   frontend:
     build: ./frontend/
-    env_file: .env
-    depends_on:
-      - db
+    # depends_on:
+      # - db
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
@@ -36,8 +28,8 @@ services:
     build: ./nginx/
     ports:
       - 80:80
-    depends_on:
-      - db
+    # depends_on:
+      # - db
     volumes:
       - ./specs/:/usr/share/nginx/html/api/docs/
       - static:/staticfiles/
