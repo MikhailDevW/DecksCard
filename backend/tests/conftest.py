@@ -18,7 +18,7 @@ if (
         f'`{PROJECT_DIR_NAME}`. Убедитесь, что у вас верная структура проекта.'
     )
 
-MANAGE_PATH = os.path.join(BASE_DIR, PROJECT_DIR_NAME)
+MANAGE_PATH = BASE_DIR  # os.path.join(BASE_DIR, PROJECT_DIR_NAME)
 project_dir_content = os.listdir(MANAGE_PATH)
 FILENAME = 'manage.py'
 
