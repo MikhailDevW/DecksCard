@@ -1,6 +1,3 @@
-import re
-
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -8,6 +5,8 @@ from django.contrib.auth.models import (
     BaseUserManager,
 )
 from django.conf import settings
+
+from .validators import password_validator, username_validator
 
 
 class UserRole(models.TextChoices):
@@ -18,7 +17,7 @@ class UserRole(models.TextChoices):
 
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, username=None, password=None, **extra_fields):
+    def create_user(self, email, password, username=None, **extra_fields):
         if not email:
             raise ValueError("User must have an email")
         email = self.normalize_email(email)
@@ -49,22 +48,6 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     """Our custom user model."""
-    def username_validator(value):
-        pattern = r'^[\w.@+-]+\Z'
-        if re.match(pattern, value) is None:
-            raise ValidationError(
-                'Enter a valid username. This value may contain only letters, '
-                'numbers, and @/./+/-/_ characters.'
-            )
-
-    def password_validator(value):
-        pattern = settings.USER_PASSWORD_PATTERN
-        if re.match(pattern, value) is None:
-            raise ValidationError(
-                'Enter a valid password.'
-                'It should contains at least one letter in uppercase!'
-            )
-
     email = models.EmailField(
         'email',
         max_length=settings.EMAIL_LENGTH,
