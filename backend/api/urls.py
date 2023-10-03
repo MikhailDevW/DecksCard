@@ -23,22 +23,5 @@ from django.urls import path, include
 urlpatterns = [
     # path('', include(router.urls)),
     path('api/', include('users.urls')),
+    path('api/', include('decks.urls')),
 ]
-#     re_path(
-#         r'^auth/login/?',
-#         TokenObtainPairView.as_view(
-#             serializer_class=MyTokenObtainPairSerializer
-#         ),
-#         name='jwt_obtain',
-#     ),
-#     re_path(
-#         r'auth/confirm/(?P<uid>\w+)/(?P<code>[-\w]+)/',
-#         ConfirmCodeView.as_view(),
-#         name='confirmation',
-#     ),
-#     # re_path(
-#     #     r'^auth/change_password/(?P<pk>\w+)/',
-#     #     ChangePasswordView.as_view(),
-#     #     name='changepassword',
-#     # ),
-# ]
