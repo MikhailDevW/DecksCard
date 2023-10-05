@@ -7,6 +7,7 @@ from .mixins import ReadCreateViewSet
 from .serializers import (
     ChangeCurrentPasswordSerializer, UserCreateReadSerializer
 )
+from .paginators import CustomUsersPaginator
 
 
 class UserViewSet(ReadCreateViewSet):
@@ -18,6 +19,7 @@ class UserViewSet(ReadCreateViewSet):
     [GET/'me'] - профиль текущего пользователя.
     [POST/'set_password'] - изменения пароля.
     """
+    pagination_class = CustomUsersPaginator
 
     def get_queryset(self):
         queryset = CustomUser.objects.all()
@@ -35,9 +37,10 @@ class UserViewSet(ReadCreateViewSet):
 
     def perform_create(self, serializer):
         obj = super().perform_create(serializer)
-
+        # ============================
         # sending email
         # send_confirmation_email('fdsfd')
+        # =============================
         return obj
 
     @action(

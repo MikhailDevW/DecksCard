@@ -1,7 +1,6 @@
 from django.conf import settings
-from django.core.exceptions import ValidationError
+# from django.core.exceptions import ValidationError
 from django.db import models
-from PIL import Image
 
 from users.models import CustomUser
 from .utils import encode_uid
@@ -58,18 +57,18 @@ class Card(models.Model):
     Данный класс модели поисывает карточку,
     которую видит пользватель.
     '''
-    def image_validator(value):
-        MAX_PIC_DIMENSION = (200, 200)
-        try:
-            with Image.open(value, formats=('PNG', 'JPEG')) as image:
-                if image.size > MAX_PIC_DIMENSION:
-                    raise ValidationError(
-                        'Incorrect image size.'
-                    )
-        except TypeError:
-            raise ValidationError(
-                'Incorrect image format.'
-            )
+    # def image_validator(value):
+    #     MAX_PIC_DIMENSION = (200, 200)
+    #     try:
+    #         with Image.open(value, formats=('PNG', 'JPEG')) as image:
+    #             if image.size > MAX_PIC_DIMENSION:
+    #                 raise ValidationError(
+    #                     'Incorrect image size.'
+    #                 )
+    #     except TypeError:
+    #         raise ValidationError(
+    #             'Incorrect image format.'
+    #         )
 
     front_side = models.CharField(
         'Front',
@@ -91,7 +90,6 @@ class Card(models.Model):
     image = models.ImageField(
         upload_to=user_directory_path,
         blank=True, null=True,
-        validators=[image_validator],
     )
     example = models.TextField(
         blank=True,
@@ -119,9 +117,9 @@ class Card(models.Model):
     def __str__(self) -> str:
         return self.front_side
 
-    def delete(self, *args, **kwargs):
-        self.image.delete()
-        super().delete(*args, **kwargs)
+    # def delete(self, *args, **kwargs):
+    #     self.image.delete()
+    #     super().delete(*args, **kwargs)
 
     class Mets:
         ordering = ('-next_use_date',)

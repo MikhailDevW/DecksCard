@@ -1,4 +1,4 @@
-from backend.decks.utils import decode_uid
+from .utils import decode_uid
 from rest_framework import permissions
 
 

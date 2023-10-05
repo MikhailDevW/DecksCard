@@ -1,4 +1,4 @@
-from core.models import Card, Deck
+from .models import Card, Deck
 
 
 def example_deck(user) -> str:
