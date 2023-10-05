@@ -23,7 +23,7 @@ DJANGO_APPS = [
 
 PROJECT_APPS = [
     'api',
-    # 'core',
+    'decks',
     'news',
     'users',
 ]
@@ -120,7 +120,7 @@ CORS_URLS_REGEX = r'^/api/.*$'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
     ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -129,6 +129,7 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
+    'PAGE_SIZE': 5,
 }
 
 LOGGING = {
