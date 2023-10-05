@@ -9,22 +9,70 @@ info:
   отредактировать выбранную или удалить.
   Раздел Cards описывает работы с карточками в каждой колоде.'
 paths:
-  /api/v1/auth/signup/:
-    get: 
-      operationId: Получение списка пользователей.
-      description: 'По данному запросу пользователь получает свойство картчоки. Какие поля есть и что там.'
+  /api/users/:
+    get:
+      operationId: 'Список пользователей.'
+      description: 'Выводится список всех пользователей зареганых на сайте. Доступно без токена.'
+      parameters:
+        - name: page
+          required: false
+          in: query
+          description: Номер страницы.
+          schema:
+            type: integer
+        - name: limit
+          required: false
+          in: query
+          description: Количество объектов на странице.
+          schema:
+            type: integer
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Card'
-          description: ''
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                    description: 'Общее количество объектов в базе'
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://braindecks.com/api/users/?page=4
+                    description: 'Ссылка на следующую страницу'
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://braindecks.com/api/users/?page=2
+                    description: 'Ссылка на предыдущую страницу'
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                    description: 'Список объектов текущей страницы'
+          description: 'OK'
+        '404':
+          description: "Странциа не найдена"
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: Page not fouond
       tags:
-      - Пользователи
+        - Пользователи
     post:
-      operationId: Регистрация
-      description: "Регистрация пользователя. Пользователь вводит email и password. На почту пользователю приходит сообщение с ссылкой актвиации и пока он по ней не перейдет его профиль считается неактивным. Права доступа: Доступно без токена. Поля email должны быть уникальными."
+      operationId: Регистрация.
+      description: "Регистрация пользователя. Пользователь вводит email и password. 
+      На почту пользователю приходит сообщение с ссылкой актвиации и пока 
+      он по ней не перейдет его профиль считается неактивным. 
+      Права доступа: Доступно без токена. Поля email должны быть уникальными."
       parameters: []
       requestBody:
         content:
@@ -32,8 +80,12 @@ paths:
             schema:
               $ref: '#/components/schemas/SignUp'
       responses:
-        '200':
-          description: 'Пользователь успешно создан.'
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreateResponse'
+          description: 'Пользователь успешно создан'
         '400':
           content:
             application/json:
@@ -42,129 +94,498 @@ paths:
                 properties: 
                   email:
                     type: string
-          description: 'Ошибка создания пользователя, такая почта уже существует в БД.'
+                    example: custom user with this email already exists.
+                  password:
+                    type: string
+                    example: 'Ensure this field has at least 8 characters. This value does not match the required pattern.'
+          description: 'Ошибка создания пользователя.'
+      tags:
+        - Пользователи
+  /api/auth/token/:
+    post: 
+      operationId: Получение токена, авторизация.
+      description: "Пользователь вводит email и password. Права доступа: Доступно без токена."
+      parameters: []
+      tags: 
+        -  Пользователи
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenGetResponse'
+          description: 'ОК'
+        '400':
+          description:  Bad request
+          content:
+            application/json:
+              schema:
+                properties:
+                  email:
+                    type: string
+                    example: "This field is required."
+                  password:
+                    type: string
+                    example: "This field is required."
+        '401':
+          content:
+            apllication/json:
+              schema: 
+                properties:
+                  detail:
+                    type: string
+                    example: No active account found with the given credentials.
+          description: 'Not Authorized'
+  /api/users/set_password/:
+    patch:
+      security: 
+        -  Token: []
+      operationId: Смена пароля.
+      description: "Пользователь предоставляет свой старый пароль и вводит новый пароль. Права доступа: по токену."
+      parameters: []
+      tags: 
+        -  Пользователи
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetPassword'
+        
+      responses:
+        '202':
+          description: 'OK'
+          content:
+            application/json:
+              schema: []
+        '400':
+          description: 'Ошибки валидации'
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+        '401':
+          description: 'No auth'
+          content:
+            apllication/json:
+              schema:
+                $ref: "#/components/schemas/NoAuth"
+  /api/users/profile/:
+    get:
+      operationId: Профиль пользователя
+      description: "Странциа личного профиля пользователя. Доступно только по токену."
+      parameters: []
+      security: 
+        -  Token: []
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: 'No auth'
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NoAuth"
       tags:
       - Пользователи
-    # get:
-    #   operationId: Получение свойств карточки
-    #   description: 'По данному запросу пользователь получает свойство картчоки. Какие поля есть и что там.'
-    #   parameters:
-    #   - name: slug
-    #     in: path
-    #     required: true
-    #     description: ''
-    #     schema:
-    #       type: string
-    #   - name: id
-    #     in: path
-    #     required: true
-    #     description: A unique integer value identifying this card.
-    #     schema:
-    #       type: string
-    #   responses:
-    #     '200':
-    #       content:
-    #         application/json:
-    #           schema:
-    #             $ref: '#/components/schemas/Card'
-    #       description: ''
-    #   tags:
-    #   - api-cards
-    # put:
-    #   operationId: Обновление карточки
-    #   description: 'Пользователь обновляет данные в карточке.'
-    #   parameters:
-    #   - name: slug
-    #     in: path
-    #     required: true
-    #     description: ''
-    #     schema:
-    #       type: string
-    #   - name: id
-    #     in: path
-    #     required: true
-    #     description: A unique integer value identifying this card.
-    #     schema:
-    #       type: string
-    #   requestBody:
-    #     content:
-    #       application/json:
-    #         schema:
-    #           $ref: '#/components/schemas/Card'
-    #       application/x-www-form-urlencoded:
-    #         schema:
-    #           $ref: '#/components/schemas/Card'
-    #       multipart/form-data:
-    #         schema:
-    #           $ref: '#/components/schemas/Card'
-    #   responses:
-    #     '200':
-    #       content:
-    #         application/json:
-    #           schema:
-    #             $ref: '#/components/schemas/Card'
-    #       description: ''
-    #   tags:
-    #   - api-cards
-    # patch:
-    #   operationId: partialUpdateCard
-    #   description: ''
-    #   parameters:
-    #   - name: slug
-    #     in: path
-    #     required: true
-    #     description: ''
-    #     schema:
-    #       type: string
-    #   - name: id
-    #     in: path
-    #     required: true
-    #     description: A unique integer value identifying this card.
-    #     schema:
-    #       type: string
-    #   requestBody:
-    #     content:
-    #       application/json:
-    #         schema:
-    #           $ref: '#/components/schemas/Card'
-    #       application/x-www-form-urlencoded:
-    #         schema:
-    #           $ref: '#/components/schemas/Card'
-    #       multipart/form-data:
-    #         schema:
-    #           $ref: '#/components/schemas/Card'
-    #   responses:
-    #     '200':
-    #       content:
-    #         application/json:
-    #           schema:
-    #             $ref: '#/components/schemas/Card'
-    #       description: ''
-    #   tags:
-    #   - api-cards
-    # delete:
-    #   operationId: Удаление картчоки.
-    #   description: 'Пользователь удаляет конкретную картчоку.'
-    #   parameters:
-    #   - name: slug
-    #     in: path
-    #     required: true
-    #     description: ''
-    #     schema:
-    #       type: string
-    #   - name: id
-    #     in: path
-    #     required: true
-    #     description: A unique integer value identifying this card.
-    #     schema:
-    #       type: string
-    #   responses:
-    #     '204':
-    #       description: ''
-    #   tags:
-    #   - api-cards
+  /api/users/{id}/:
+    get:
+      operationId: Профиль пользователя по айди.
+      description: "Не знаю зачем это сделал но пока пусть будет. Есть не просит. Доступно всем."
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 'айди пользователя'
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+          description: 'ОК'
+        '404':
+          description: Not found
+          content: 
+            application/json:
+              schema: 
+                properties: 
+                  detail:
+                    type: string
+                    example: Not found
+      tags:
+      - Пользователи
+  /api/dashborad/:
+    get:
+      security: 
+        -  Token: []
+      operationId: Все колоды пользователя.
+      description: Запрос на получение всех колод которые есть у пользователя. Дрступ только зареганым пользователям.
+      parameters:
+        - name: page
+          required: false
+          in: query
+          description: Номер страницы.
+          schema:
+            type: integer
+        - name: limit
+          required: false
+          in: query
+          description: Количество объектов на странице.
+          schema:
+            type: integer
+      tags: 
+        -  Карточки
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                    description: 'Общее количество объектов в базе'
+                  next:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://braindecks.com/api/dashboard/?page=4
+                    description: 'Ссылка на следующую страницу'
+                  previous:
+                    type: string
+                    nullable: true
+                    format: uri
+                    example: http://braindecks.com/api/dashboard/?page=2
+                    description: 'Ссылка на предыдущую страницу'
+                  results:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Deck"
+                    description: 'Список объектов текущей страницы'
+          description: 'OK'
+        '401':
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NoAuth"
+          description: Unauthorized
+    post:
+      security: 
+        -  Token: []
+      operationId: Создать колоду.
+      description: Ручка для создания колоды пользователем. Доступно только по токену.
+      tags: 
+        -  Карточки
+      requestBody: 
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/Deck"
+      responses: 
+        '201':
+          description: 'OK'
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/Deck"
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema: 
+                properties:
+                  title:
+                    type: array
+                    example: [This field is required.]
+        '401':
+          description: No auth
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NoAuth"
+  /api/dashboard/{slug}/:
+    get:
+      operationId: Информация о колоде.
+      description: Ручка запроса об информации по конкретной колодей..
+      security: 
+        -  Token: []
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deck'
+          description: ''
+      tags:
+      - Карточки
+    patch:
+      operationId: Измнение настроек колоды.
+      description: .
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Deck'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deck'
+          description: ''
+      tags:
+      - Карточки
+  /api/dashboard/{slug}/cards/:
+    get:
+      operationId: Карточки для учебы.
+      description: 'Список карточек которые надо бы сегодня выучить'
+      security: 
+        -  Token: []
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        description: 'слаг колоды'
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Card'
+          description: 'ОК'
+        '401':
+          description: No ayth
+          content:
+            application/json:
+              schema: 
+                $ref: "#/components/schemas/NoAuth"
+      tags:
+      - Карточки
+    post:
+      operationId: Создать карточку.
+      description: 'Ручка для добавления новой карточки в колоду'
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        description: 'slug колоды'
+        schema:
+          type: string 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Card'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+          description: 'OK'
+        '400':
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                properties:
+                  front_side:
+                    type: string
+                    example: ["This field is required."]
+                  back_side:
+                    type: string
+                    example: ["This field is required."]
+        '401':
+          description: No auth
+          content:
+            applicatiom/json:
+              schema: 
+                $ref: "#/components/schemas/NoAuth"
+      tags:
+      - Карточки
+  /api/dashboard/{slug}/cards/all/:
+    get:
+      operationId: Все карточки.
+      description: 'Выводится список всех карт которые есть в колоде'
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+          description: ''
+      tags:
+      - Карточки
+  /api/news/:
+    get: 
+      operationId: Новости
+      description: Список новостей сайта. Доступно всем.
+      responses:
+      tags: 
+        -  Новости
+          
 components:
   schemas:
+    User:
+      description:  'Пользователь.'
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+          description: "Адрес электронной почты"
+        username:
+          type: string
+          description: "Уникальный юзернейм"
+          pattern: ^[\w.@+-]+\z
+          maxLength: 150
+        first_name:
+          type: string
+          maxLength: 150
+          description: "Имя"
+          example: "Вася"
+        last_name:
+          type: string
+          maxLength: 150
+          description: "Фамилия"
+          example: "Пупкин"
+      required:
+        - email
+    SignUp:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 100
+        password:
+          type: string
+          minLength: 8
+          pattern: (?=.*[A-Z])
+          example: mysecretpassword
+        first_name:
+          type: string
+          nullable: true
+          maxLength: 150
+          example: Doctor
+        last_name:
+          type: string
+          nullable: true
+          maxLength: 150
+          example: Livesey
+      required:
+      - email
+      - password
+    UserCreateResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 100
+          description: "Адрес электронной почты"
+          example: "vpupkin@yandex.ru"
+        username:
+            type: string
+            description: "Уникальный юзернейм"
+            pattern: ^[\w.@+-]+\z
+            maxLength: 150
+            example: "vasya.pupkin"
+        first_name:
+          type: string
+          maxLength: 150
+          description: "Имя"
+          example: "Вася"
+        last_name:
+          type: string
+          maxLength: 150
+          description: "Фамилия"
+          example: "Пупкин"
+      required:
+        - email
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 100
+          description: "Адрес электронной почты"
+          example: "vpupkin@yandex.ru"
+        password:
+          type: string
+          format: password
+          maxLength: 1
+          description: 'Пароль аккаунта'
+          example: 'qwerty'
+      required: 
+        -  email
+        - password
+    TokenGetResponse:
+      type: object
+      properties:
+        access:
+          type: string
+    SetPassword:
+      type: object
+      properties:
+        current_password:
+          type: string
+          format: password
+          description: Старый пароль
+          example: qwerty
+        new_password:
+          type: string
+          format: password
+          description: Новый пароль
+          example: newqwerty
+      required: 
+        - current_password
+        - new_password
     Deck:
       type: object
       properties:
@@ -174,8 +595,10 @@ components:
         title:
           type: string
           maxLength: 200
+          example: Example Deck
         description:
           type: string
+          example: description for deck
         cards_per_day:
           type: integer
         amount:
@@ -189,58 +612,55 @@ components:
         id:
           type: integer
           readOnly: true
+          example: 1
         front_side:
           type: string
           maxLength: 200
+          example: cat
         prompt:
           type: string
           nullable: true
           maxLength: 200
+          example: ну животинка такая
         back_side:
           type: string
           maxLength: 200
+          example: кошечка
         example:
           type: string
-        next_use_date:
-          type: string
+          example: кошечка гуляеь по лугу
         level:
           type: integer
+          example: 1
+        next_use_date:
+          type: string
+          example: '2023-10-04T10:08:07.082614Z'
       required:
       - front_side
       - back_side
-    SignUp:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-          maxLength: 100
-        password:
-          type: string
-          minLength: 8
-          pattern: (?=.*[A-Z])
-        first_name:
-          type: string
-          nullable: true
-          maxLength: 150
-        last_name:
-          type: string
-          nullable: true
-          maxLength: 150
-      required:
-      - email
-      - password
-    MyTokenObtainPair:
-      type: object
-      properties:
-        email:
-          type: string
-        password:
-          type: string
-          writeOnly: true
-      required:
-      - email
-      - password
     ConfirmCode:
       type: object
       properties: {}
+    ValidationError:
+      description: Стандартные ошибки валидации DRF
+      type: object
+      properties:
+        field_name:
+          description: 'Название поля, в котором произошли ошибки. Таких полей может быть несколько'
+          example: [ 'Обязательное поле.' ]
+          type: array
+          items:
+            type: string
+    NoAuth:
+      description: no auth
+      type: object
+      properties:
+        detail:
+          type: string
+          example: fdsfsd
+  securitySchemes:
+    Token:
+      description: 'Авторизация по токену. <br>
+      Все запросы от имени пользователя должны выполняться с заголовком "Authorization: Token TOKENVALUE"'
+      type: http
+      scheme: token
