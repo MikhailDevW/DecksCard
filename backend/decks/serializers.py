@@ -34,9 +34,23 @@ class DeckSerializer(serializers.ModelSerializer):
         author = self.context.get('request').user
         new_deck = Deck.objects.create(
             author=author,
-            **validated_data
+            **validated_data,
         )
         return new_deck
+
+    def validate(self, data):
+        if Deck.objects.filter(
+            author=self.context.get('request').user,
+            title=data['title'],
+        ).exists():
+            raise serializers.ValidationError(
+                'You have the deck with same title already.'
+            )
+        if 'cards_per_day' in data and data['cards_per_day'] <= 0:
+            raise serializers.ValidationError(
+                'Should be more than 0.'
+            )
+        return data
 
 
 class CardSerializer(serializers.ModelSerializer):

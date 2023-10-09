@@ -1,18 +1,11 @@
 from datetime import date
-# import smtplib
 
-# from django.conf import settings
-# from django.contrib.auth.hashers import make_password
-# from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-# from core.example_deck import example_deck
 from .models import Deck
-# from core.utils import Mail
-# from .mixins import CreateViewSet
 from .paginators import CustomPaginator
 from .permissions import OwnerOnly
 from .serializers import CardSerializer, DeckSerializer
@@ -21,8 +14,11 @@ from .utils import decode_uid
 
 class DashboardViewSet(viewsets.ModelViewSet):
     """
-    CRUD Deck model with viewset and limit offset pagination.
-    Methods: GET, POST, PUT, PATCH, DELETE.
+    Methods:
+    - GET: get all the decks user has;
+    - POST: create new deck:
+    - PATCH: change the decks setting
+    - DELETE: the deck.
     Only owner can edit the Deck.
     """
     serializer_class = DeckSerializer

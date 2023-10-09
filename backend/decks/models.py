@@ -1,13 +1,14 @@
-from django.conf import settings
 # from django.core.exceptions import ValidationError
 from django.db import models
+from django.conf import settings
+from django.core.validators import MinValueValidator
 
 from users.models import CustomUser
 from .utils import encode_uid
 
 
 class Deck(models.Model):
-    '''Данный класс описывает таблицу колод карточек.'''
+    """Данный класс описывает таблицу колод карточек."""
     title = models.CharField(
         'Title',
         max_length=settings.DECK_TITLE_LENGTH,
@@ -24,7 +25,7 @@ class Deck(models.Model):
     cards_per_day = models.PositiveIntegerField(
         'Amount per day',
         default=settings.CARDS_PER_DAY_DEFAULT,
-        validators=[],
+        validators=[MinValueValidator(1), ],
     )
     author = models.ForeignKey(
         CustomUser,
