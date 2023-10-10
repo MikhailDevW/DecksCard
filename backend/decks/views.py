@@ -3,11 +3,10 @@ from datetime import date
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
-from rest_framework.response import Response
 
 from .models import Deck
 from .paginators import CustomPaginator
-from .permissions import OwnerOnly
+# from .permissions import OwnerOnly
 from .serializers import CardSerializer, DeckSerializer
 from .utils import decode_uid
 
@@ -34,6 +33,7 @@ class DashboardViewSet(viewsets.ModelViewSet):
 
 class CardsViewSet(viewsets.ModelViewSet):
     serializer_class = CardSerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
     def _get_deck(self):
         return get_object_or_404(
@@ -52,11 +52,13 @@ class CardsViewSet(viewsets.ModelViewSet):
     @action(
         methods=['get'],
         detail=False,
-        permission_classes=(OwnerOnly,),
+        permission_classes=(permissions.IsAuthenticated,),
+        pagination_class=CustomPaginator,
         url_path='all',
-        url_name='all'
+        url_name='all',
     )
     def all(self, request, *args, **kwargs):
         cards = self._get_deck().cards.all()
-        serializer = CardSerializer(cards, many=True)
-        return Response(serializer.data)
+        page = self.paginate_queryset(cards)
+        serializer = CardSerializer(page, many=True)
+        return self.get_paginated_response(serializer.data)

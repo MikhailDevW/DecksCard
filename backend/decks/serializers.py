@@ -1,7 +1,7 @@
 from django.db import transaction
 from rest_framework import serializers
-# from rest_framework.relations import SlugRelatedField
 # from rest_framework.validators import UniqueValidator
+# from rest_framework.relations import SlugRelatedField
 
 from users.serializers import UserCreateReadSerializer
 from .models import Card, Deck
@@ -39,9 +39,8 @@ class DeckSerializer(serializers.ModelSerializer):
         return new_deck
 
     def validate(self, data):
-        if Deck.objects.filter(
-            author=self.context.get('request').user,
-            title=data['title'],
+        if self.context.get('request').user.decks.filter(
+            title=data['title']
         ).exists():
             raise serializers.ValidationError(
                 'You have the deck with same title already.'
@@ -60,6 +59,9 @@ class CardSerializer(serializers.ModelSerializer):
         allow_empty_file=True,
         required=False,
     )
+    deck = DeckSerializer(
+        read_only=True,
+    )
 
     class Meta:
         model = Card
@@ -72,7 +74,32 @@ class CardSerializer(serializers.ModelSerializer):
             'level',
             'next_use_date',
             'image',
+            'deck',
         )
+
+    def _get_deck_slug(self) -> str:
+        return self.context.get(
+            'request'
+        ).parser_context.get(
+            'kwargs'
+        ).get('slug')
+
+    def _get_deck(self):
+        #  get oj or 404
+        return self.context.get(
+            'request'
+        ).user.decks.get(
+            slug=self._get_deck_slug()
+        )
+
+    def validate(self, data):
+        if self._get_deck().cards.filter(
+            front_side=data['front_side']
+        ).exists():
+            raise serializers.ValidationError(
+                'You have the card with same front side already.'
+            )
+        return data
 
 
 # class SignUpSerializer(serializers.ModelSerializer):

@@ -54,23 +54,9 @@ def user_directory_path(instance, filename):
 
 
 class Card(models.Model):
-    '''
-    Данный класс модели поисывает карточку,
-    которую видит пользватель.
-    '''
-    # def image_validator(value):
-    #     MAX_PIC_DIMENSION = (200, 200)
-    #     try:
-    #         with Image.open(value, formats=('PNG', 'JPEG')) as image:
-    #             if image.size > MAX_PIC_DIMENSION:
-    #                 raise ValidationError(
-    #                     'Incorrect image size.'
-    #                 )
-    #     except TypeError:
-    #         raise ValidationError(
-    #             'Incorrect image format.'
-    #         )
-
+    """
+    Данный класс модели поисывает карточку, которую видит пользватель.
+    """
     front_side = models.CharField(
         'Front',
         max_length=settings.CARD_MAX_LENGTH,

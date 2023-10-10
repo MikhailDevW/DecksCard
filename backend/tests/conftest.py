@@ -18,7 +18,7 @@ if (
         f'`{PROJECT_DIR_NAME}`. Убедитесь, что у вас верная структура проекта.'
     )
 
-MANAGE_PATH = BASE_DIR  # os.path.join(BASE_DIR, PROJECT_DIR_NAME)
+MANAGE_PATH = BASE_DIR
 project_dir_content = os.listdir(MANAGE_PATH)
 FILENAME = 'manage.py'
 
@@ -29,7 +29,3 @@ if FILENAME not in project_dir_content:
     )
 
 assert get_version() < '4.0.0', 'Пожалуйста, используйте версию Django < 4.0.0'
-
-# pytest_plugins = [
-#     'tests.fixtures.fixture_user',
-# ]
