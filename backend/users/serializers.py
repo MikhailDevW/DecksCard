@@ -85,3 +85,82 @@ class UserCreateReadSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         return super().validate(attrs)
+
+# class SignUpSerializer(serializers.ModelSerializer):
+#     password = serializers.RegexField(
+#         regex=settings.USER_PASSWORD_PATTERN,
+#         min_length=settings.USER_PASSWORD_MIN_LENGTH,
+#     )
+
+#     class Meta:
+#         fields = (
+#             'email',
+#             'password',
+#             'first_name',
+#             'last_name',
+#         )
+#         model = CustomUser
+
+
+#  class ProfileSerializer(serializers.ModelSerializer):
+#     username = serializers.RegexField(
+#         regex=r'^[\w.@+-]+\Z',
+#         max_length=settings.NAME_LENGTH,
+#         min_length=None,
+#         validators=[
+#             UniqueValidator(
+#                 queryset=CustomUser.objects.all()
+#             )
+#         ]
+#     )
+#     first_name = serializers.CharField(
+#         max_length=settings.NAME_LENGTH
+#     )
+
+#     class Meta:
+#         model = CustomUser
+#         fields = (
+#             'username',
+#             'first_name',
+#             'last_login',
+#             'email',
+#         )
+#         read_only_fields = (
+#             'email',
+#             'last_login',
+#         )
+
+
+# class ChangePasswordSerializer(serializers.ModelSerializer):
+#     """
+#     !!!
+#     Данный сериализатор не реализован.
+#     Требуется доработка в части сравнения пароля.
+#     !!!
+#     """
+#     # password = serializers.RegexField(
+#     #     regex=settings.USER_PASSWORD_PATTERN,
+#     #     min_length=settings.USER_PASSWORD_MIN_LENGTH,
+#     # )
+
+#     class Meta:
+#         fields = (
+#             'password',
+#         )
+#         model = CustomUser
+
+#     def validate_password(self, value):
+#         old_password = self.context.get('request').user.password
+#         confirm_password = make_password(value)
+#         if old_password != confirm_password:
+#             raise serializers.ValidationError(
+#                 'Nicht!!!'
+#             )
+#         # if (
+#         #     re.match(settings.USER_PASSWORD_PATTERN, value) is None
+#         # ):
+#         #     raise serializers.ValidationError(
+#         #         'Enter a valid password.'
+#         #         'It should contains at least one letter in uppercase!'
+#         #     )
+#         return value

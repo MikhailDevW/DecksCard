@@ -16,7 +16,7 @@ class DashboardViewSet(viewsets.ModelViewSet):
     Methods:
     - GET: get all the decks user has;
     - POST: create new deck:
-    - PATCH: change the decks setting
+    - PATCH: change the decks setting;
     - DELETE: the deck.
     Only owner can edit the Deck.
     """
@@ -32,6 +32,15 @@ class DashboardViewSet(viewsets.ModelViewSet):
 
 
 class CardsViewSet(viewsets.ModelViewSet):
+    """
+    Methods:
+    - GET: get all the cards user has to learn today;
+    - POST: create new card:
+    - PATCH: change the card;
+    - DELETE: the card;
+    - GET /all/ - get all the cards user has in deck.
+    Only owner can edit the Deck.
+    """
     serializer_class = CardSerializer
     permission_classes = (permissions.IsAuthenticated,)
 

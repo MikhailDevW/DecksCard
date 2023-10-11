@@ -11,19 +11,21 @@ class DeckSerializer(serializers.ModelSerializer):
     author = UserCreateReadSerializer(
         read_only=True,
     )
-    slug = serializers.SlugField(read_only=True)
-    amount = serializers.SerializerMethodField()
+    slug = serializers.SlugField(
+        read_only=True)
+    amount = serializers.SerializerMethodField(
+        read_only=True,
+    )
 
     class Meta:
         model = Deck
         fields = (
-            'slug',
-            'author',
-
             'title',
+            'slug',
             'description',
             'cards_per_day',
             'amount',
+            'author',
         )
 
     def get_amount(self, obj):
@@ -39,12 +41,13 @@ class DeckSerializer(serializers.ModelSerializer):
         return new_deck
 
     def validate(self, data):
-        if self.context.get('request').user.decks.filter(
-            title=data['title']
-        ).exists():
-            raise serializers.ValidationError(
-                'You have the deck with same title already.'
-            )
+        if 'title' in data:
+            if self.context.get('request').user.decks.filter(
+                title=data['title']
+            ).exists():
+                raise serializers.ValidationError(
+                    'You have the deck with same title already.'
+                )
         if 'cards_per_day' in data and data['cards_per_day'] <= 0:
             raise serializers.ValidationError(
                 'Should be more than 0.'
@@ -93,90 +96,16 @@ class CardSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        if self._get_deck().cards.filter(
-            front_side=data['front_side']
-        ).exists():
-            raise serializers.ValidationError(
-                'You have the card with same front side already.'
-            )
+        if 'front_side' in data:
+            if self._get_deck().cards.filter(
+                front_side=data['front_side']
+            ).exists():
+                raise serializers.ValidationError(
+                    'You have the card with same front side already.'
+                )
+        if 'level' in data:
+            if data['level'] not in range(0, 6):
+                raise serializers.ValidationError(
+                    'Level should be in 0..5'
+                )
         return data
-
-
-# class SignUpSerializer(serializers.ModelSerializer):
-#     password = serializers.RegexField(
-#         regex=settings.USER_PASSWORD_PATTERN,
-#         min_length=settings.USER_PASSWORD_MIN_LENGTH,
-#     )
-
-#     class Meta:
-#         fields = (
-#             'email',
-#             'password',
-#             'first_name',
-#             'last_name',
-#         )
-#         model = CustomUser
-
-
-#  class ProfileSerializer(serializers.ModelSerializer):
-#     username = serializers.RegexField(
-#         regex=r'^[\w.@+-]+\Z',
-#         max_length=settings.NAME_LENGTH,
-#         min_length=None,
-#         validators=[
-#             UniqueValidator(
-#                 queryset=CustomUser.objects.all()
-#             )
-#         ]
-#     )
-#     first_name = serializers.CharField(
-#         max_length=settings.NAME_LENGTH
-#     )
-
-#     class Meta:
-#         model = CustomUser
-#         fields = (
-#             'username',
-#             'first_name',
-#             'last_login',
-#             'email',
-#         )
-#         read_only_fields = (
-#             'email',
-#             'last_login',
-#         )
-
-
-# class ChangePasswordSerializer(serializers.ModelSerializer):
-#     """
-#     !!!
-#     Данный сериализатор не реализован.
-#     Требуется доработка в части сравнения пароля.
-#     !!!
-#     """
-#     # password = serializers.RegexField(
-#     #     regex=settings.USER_PASSWORD_PATTERN,
-#     #     min_length=settings.USER_PASSWORD_MIN_LENGTH,
-#     # )
-
-#     class Meta:
-#         fields = (
-#             'password',
-#         )
-#         model = CustomUser
-
-#     def validate_password(self, value):
-#         old_password = self.context.get('request').user.password
-#         confirm_password = make_password(value)
-#         if old_password != confirm_password:
-#             raise serializers.ValidationError(
-#                 'Nicht!!!'
-#             )
-#         # if (
-#         #     re.match(settings.USER_PASSWORD_PATTERN, value) is None
-#         # ):
-#         #     raise serializers.ValidationError(
-#         #         'Enter a valid password.'
-#         #         'It should contains at least one letter in uppercase!'
-#         #     )
-#         return value

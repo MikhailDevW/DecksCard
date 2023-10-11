@@ -1,7 +1,7 @@
 # from django.core.exceptions import ValidationError
 from django.db import models
 from django.conf import settings
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 from users.models import CustomUser
 from .utils import encode_uid
@@ -93,6 +93,7 @@ class Card(models.Model):
     level = models.PositiveIntegerField(
         default=0,
         verbose_name='level',
+        validators=[MaxValueValidator(5), ],
     )
 
     deck = models.ForeignKey(
