@@ -1,22 +1,17 @@
 import smtplib
 
-# from django.contrib.auth.tokens import default_token_generator
+from celery import shared_task
 from django.core.mail import send_mail
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
-DUBUG_CONFIRM_URL = 'http://127.0.0.1:8000/auth/confirm/'
 CONFIRM_URL = 'https://brain/auth/confirm/'
 
 
-def encode_uid(pk):
-    return force_str(urlsafe_base64_encode(force_bytes(pk)))
+@shared_task()
+def add(x, y):
+    return x + y
 
 
-def decode_uid(pk):
-    return force_str(urlsafe_base64_decode(pk))
-
-
+@shared_task()
 def send_confirmation_email(
     to,
     uid,

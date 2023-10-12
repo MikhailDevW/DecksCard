@@ -86,6 +86,9 @@ class UserCreateReadSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         return super().validate(attrs)
 
+
+class ConfirmCodeSerializer(serializers.Serializer):
+    pass
 # class SignUpSerializer(serializers.ModelSerializer):
 #     password = serializers.RegexField(
 #         regex=settings.USER_PASSWORD_PATTERN,

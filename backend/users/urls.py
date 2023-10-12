@@ -1,8 +1,8 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework.routers import SimpleRouter
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .views import UserViewSet
+from .views import ConfirmCodeView, UserViewSet
 from .serializers import MyTokenObtainPairSerializer
 
 router = SimpleRouter()
@@ -16,5 +16,10 @@ urlpatterns = [
             serializer_class=MyTokenObtainPairSerializer
         ),
         name='token_obtain'
+    ),
+    re_path(
+        r'auth/confirm/(?P<uid>\w+)/(?P<code>[-\w]+)/',
+        ConfirmCodeView.as_view(),
+        name='confirmation',
     ),
 ]
